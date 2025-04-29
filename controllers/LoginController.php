@@ -1,0 +1,100 @@
+<?php
+require_once '../models/Usuario.php';
+require_once '../includes/db.connection.php';
+
+class LoginController {
+    private $conn;
+
+    public function __construct() {
+        $this->conn = getConnection();
+    }
+
+    public function inserir($dados) {
+        try {
+            // Iniciar transação
+            $this->conn->beginTransaction();
+
+            $usuario = new Usuario();
+            $usuario->nome = $dados['nome'];
+            $usuario->email = $dados['email'];
+            $usuario->senha = md5($dados['email'].$dados['senha']);
+
+            $usuario->salvar($this->conn);
+
+            $this->conn->commit();
+            return true;
+
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            return false;
+        }
+    }
+
+    public function login($email, $dados) {
+        session_start();
+
+        try {
+            // Iniciar transação
+            $this->conn->beginTransaction();
+
+            $usuario = new Usuario();
+
+            $usuarioBuscado = $usuario->buscaPorLogin($this->conn, $email);
+
+            if(!$usuarioBuscado){
+                return false; 
+            }
+            else{
+                if(!strcmp(md5($dados['email'].$dados['senha']),$usuarioBuscado->senha)){
+                    $_SESSION["id_usuario"]= $usuarioBuscado->id; 
+                    $_SESSION["nome_usuario"] = stripslashes($usuarioBuscado->nome); 
+
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            return false;
+        }
+    }
+    
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    $controller = new LoginController();
+
+    if (isset($_POST['acao'])) {
+        switch ($_POST['acao']) {
+            case 'inserir':
+                if ($controller->inserir($_POST)) {
+                    header('Location: ../views/cadastro.php?msg=inserido');
+                } else {
+                    header('Location: ../views/cadastro.php?msg=erro');
+                }
+                break;
+
+            case 'executarLogin': 
+                if ($controller->login($_POST['email'], $_POST)) {
+                    header('Location: ../views/index.php');
+                } else {
+                    header('Location: ../views/login.php?msg=erro');
+                }
+                break; 
+
+            case 'alterar':
+                $controller->alterar($_POST['id'], $_POST);
+                header('Location: ../views/cadastro.php?msg=alterado');
+                break;
+
+            case 'excluir':
+                $controller->excluir($_POST['id']);
+                header('Location: ../views/cadastro.php?msg=excluido');
+                break;
+        }
+    }
+}
+?>

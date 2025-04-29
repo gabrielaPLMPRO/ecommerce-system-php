@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/db.connection.php';
+require_once '../includes/db.connection.php';
 
 class Usuario {
     public $id;
@@ -8,41 +8,45 @@ class Usuario {
     public $senha;
     public $tipo;
 
-    public function cadastrar($nome, $email, $senha, $tipo) {
-        global $pdo;
-        try {
-            $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
+    public function buscaPorLogin($conn, $email) {
 
-            $sql = "INSERT INTO usuarios (nome, email, senha, tipo) VALUES (:nome, :email, :senha, :tipo)";
-            $stmt = $pdo->prepare($sql);
-            
-            $stmt->bindParam(':nome', $nome);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':senha', $senhaHash); 
-            $stmt->bindParam(':tipo', $tipo);
-            
-            $stmt->execute();
-            return true;
-        } catch (PDOException $e) {
-            return false;
-        }
-    }
+        $usuario = null;
 
-    public function login($email, $senha) {
-        global $pdo;
-        
-        $sql = "SELECT * FROM usuarios WHERE email = :email";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':email', $email);
-        
+        $sql = "SELECT
+                    id, nome, email, senha, tipo
+                FROM
+                     usuarios 
+                WHERE
+                    email = ?
+                LIMIT
+                    1 OFFSET 0";
+     
+        $stmt = $conn->prepare( $sql );
+        $stmt->bindParam(1, $email);
         $stmt->execute();
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($usuario && password_verify($senha, $usuario['senha'])) {
-            return $usuario;
-        }
-
-        return false;
+     
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row) {
+            $usuario = new Usuario();
+            $usuario->id = $row['id'];
+            $usuario->nome = $row['nome'];
+            $usuario->email = $row['email'];
+            $usuario->senha = $row['senha'];
+            $usuario->tipo = $row['tipo'];
+        } 
+     
+        return $usuario;
     }
+    public function salvar($conn) {
+        $sql = "INSERT INTO usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute([
+            $this->nome,
+            $this->email,
+            $this->senha,
+            'cliente'
+        ]);
+    }
+
 }
 ?>

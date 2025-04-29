@@ -2,7 +2,7 @@
 $host = 'localhost';
 $dbname = 'virtual_store';
 $user = 'postgres';
-$password = '123';
+$password = 'ucs';
 
 function getConnection() {
     global $host, $dbname, $user, $password;

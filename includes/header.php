@@ -18,7 +18,23 @@
                     <li><a href="#">Produtos</a></li>
                     <li><a href="#">Sobre</a></li>
                     <li><a href="#">Contato</a></li>
+                    <?php	
+                    include_once "comum.php";
+                    
+                    if ( is_session_started() === FALSE ) {
+                        session_start();
+                    }	
+                    
+                    if(isset($_SESSION["nome_usuario"])) {
+                        // Informações de login
+                        echo "<li><span>Você está logado como " . $_SESSION["nome_usuario"];		
+                        echo "<a href='executa_logout.php'> Logout </a></span></li>";
+                    } else {
+                        echo "<li><span><a href='login.php'> Efetuar Login </a></span></li>";
+                    }
+                    ?>	
                 </ul>
             </nav>
+               
         </div>
     </header>
