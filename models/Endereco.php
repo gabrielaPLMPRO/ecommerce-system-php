@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/db.connection.php';
+require_once '../includes/db.connection.php';
 
 class Endereco {
     public $id;
@@ -11,24 +11,25 @@ class Endereco {
     public $cidade;
     public $estado;
 
-    // public function inserir($nome, $email, $senha, $tipo) {
-    //     global $pdo;
-    //     try {
-    //         $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
+    public function salvar($conn) {
+        $sql = "INSERT INTO endereco (rua, numero, complemento, bairro, cep, cidade, estado)
+                VALUES (:rua, :numero, :complemento, :bairro, :cep, :cidade, :estado)
+                RETURNING id";
 
-    //         $sql = "INSERT INTO usuarios (nome, email, senha, tipo) VALUES (:nome, :email, :senha, :tipo)";
-    //         $stmt = $pdo->prepare($sql);
-            
-    //         $stmt->bindParam(':nome', $nome);
-    //         $stmt->bindParam(':email', $email);
-    //         $stmt->bindParam(':senha', $senhaHash); 
-    //         $stmt->bindParam(':tipo', $tipo);
-            
-    //         $stmt->execute();
-    //         return true;
-    //     } catch (PDOException $e) {
-    //         return false;
-    //     }
-    // }
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindParam(':rua', $this->rua);
+        $stmt->bindParam(':numero', $this->numero);
+        $stmt->bindParam(':complemento', $this->complemento);
+        $stmt->bindParam(':bairro', $this->bairro);
+        $stmt->bindParam(':cep', $this->cep);
+        $stmt->bindParam(':cidade', $this->cidade);
+        $stmt->bindParam(':estado', $this->estado);
+
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['id'];
+    }
 }
 ?>

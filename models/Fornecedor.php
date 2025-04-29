@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/db.connection.php';
+require_once '../includes/db.connection.php';
 
 class Fornecedor {
     public $id;
@@ -9,24 +9,25 @@ class Fornecedor {
     public $email;
     public $endereco_id;
 
-    // public function inserir($nome, $email, $senha, $tipo) {
-    //     global $pdo;
-    //     try {
-    //         $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
+    public function __construct($id = null, $nome = '', $descricao = '', $telefone = '', $email = '', $endereco_id = null) {
+        $this->id = $id;
+        $this->nome = $nome;
+        $this->descricao = $descricao;
+        $this->telefone = $telefone;
+        $this->email = $email;
+        $this->endereco_id = $endereco_id;
+    }
 
-    //         $sql = "INSERT INTO usuarios (nome, email, senha, tipo) VALUES (:nome, :email, :senha, :tipo)";
-    //         $stmt = $pdo->prepare($sql);
-            
-    //         $stmt->bindParam(':nome', $nome);
-    //         $stmt->bindParam(':email', $email);
-    //         $stmt->bindParam(':senha', $senhaHash); 
-    //         $stmt->bindParam(':tipo', $tipo);
-            
-    //         $stmt->execute();
-    //         return true;
-    //     } catch (PDOException $e) {
-    //         return false;
-    //     }
-    // }
+    public function salvar($conn) {
+        $sql = "INSERT INTO fornecedores (nome, descricao, telefone, email, endereco_id) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute([
+            $this->nome,
+            $this->descricao,
+            $this->telefone,
+            $this->email,
+            $this->endereco_id
+        ]);
+    }
 }
 ?>
