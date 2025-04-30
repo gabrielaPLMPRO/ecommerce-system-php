@@ -2,8 +2,8 @@
 
 <main>
     <section class="intro">
-        <h1>Bem-vindo à nossa loja virtual!</h1>
-        <p>Explore nossos produtos e aproveite as ofertas exclusivas.</p>
+        <h1>Bem-vindo ao AquiExpress!</h1>
+        <p>Explore os produtos e aproveite as ofertas exclusivas.</p>
     </section>
 
     <section class="products">

@@ -1,31 +1,3 @@
-.btn-aliexpress {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: #ff4747;
-    color: #fff;
-    font-family: 'Segoe UI', 'Arial', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    text-decoration: none;
-    border: none;              /* remove borda */
-    outline: none;             /* remove contorno de foco */
-    border-radius: 30px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-  
-.btn-aliexpress:hover {
-    background-color: #e63e3e;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-  
-.btn-aliexpress:active {
-    transform: translateY(0);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -39,30 +11,60 @@ body {
     margin: 0;
 }
 
+:root {
+    --primary-color: #ff5800;
+    --secondary-color: #ff4747;
+    --hover-color: #e64a00;
+    --success-color: #d4edda;
+    --danger-color: #f8d7da;
+    --text-color: #333;
+    --white: #fff;
+    --border-color: #ddd;
+}
+
 header {
-    background-color: #ff5800;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--white);
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
+    position: relative;
+    height: 80px;
 }
 
-header .logo img {
-    max-width: 150px;
+.logo-fixed {
+    position: absolute;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-header nav ul {
+.logo-fixed img {
+    height: 50px;
+}
+
+.brand-name {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--white);
+}
+
+.header-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-nav ul {
     list-style: none;
     display: flex;
+    gap: 20px;
 }
 
-header nav ul li {
-    margin-left: 20px;
-}
-
-header nav ul li a {
-    color: #fff;
+.main-nav ul li a {
+    color: var(--white);
     text-decoration: none;
     font-weight: bold;
 }
@@ -88,8 +90,8 @@ header nav ul li a {
 }
 
 .product {
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
     padding: 15px;
     text-align: center;
     border-radius: 5px;
@@ -108,8 +110,8 @@ header nav ul li a {
 }
 
 .product button {
-    background-color: #ff5800;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--white);
     border: none;
     padding: 10px;
     border-radius: 5px;
@@ -117,7 +119,7 @@ header nav ul li a {
 }
 
 .product button:hover {
-    background-color: #e64a00;
+    background-color: var(--hover-color);
 }
 
 @media (max-width: 1200px) {
@@ -137,144 +139,224 @@ header nav ul li a {
         grid-template-columns: 1fr;
     }
 
-    header nav ul {
+    header {
         flex-direction: column;
+        height: auto;
     }
-    
-    .main-banner {
-        height: 200px;
+
+    .header-container {
+        justify-content: center;
+        padding-top: 60px;
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo-fixed {
+        position: static;
+        margin-bottom: 10px;
+        justify-content: center;
     }
 }
 
 footer {
     background-color: #333;
-    color: #fff;
+    color: var(--white);
     text-align: center;
     padding: 10px;
     margin-top: 20px;
 }
 
 .card-form {
-    background: #fff;
+    background: var(--white);
     border-radius: 15px;
     padding: 30px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 50px auto;
-}
-
-.btn-custom {
-    background-color: #ff4747;
-    border: none;
-}
-
-.btn-custom:hover {
-    background-color: #e53e3e;
-}
-
-h2 {
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 30px;
-    text-align: center;
-}
-/* Adicionando ao arquivo CSS */
-.container {
-    width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.card-form {
-    background: #fff;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
     margin: 20px auto;
 }
 
 h2 {
     font-weight: bold;
-    color: #333;
+    color: var(--text-color);
     margin-bottom: 30px;
     text-align: center;
 }
 
 .btn-custom {
-    background-color: #ff4747;
+    background-color: var(--secondary-color);
     border: none;
+    color: var(--white);
+    font-weight: bold;
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-custom:hover {
     background-color: #e53e3e;
+    transform: translateY(-2px);
+}
+
+.btn-custom:active {
+    transform: translateY(0);
+}
+
+.table-responsive {
+    margin-top: 20px;
+    overflow-x: auto;
+    text-align: center;
 }
 
 .table {
-    background-color: #fff;
-    border: 1px solid #ddd;
+    width: 100%;
+    background-color: var(--white);
+    border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
-.table th, .table td {
-    text-align: center;
+.table th,
+.table td {
     padding: 15px;
+    text-align: center;
 }
 
 .table th {
-    background-color: #ff5800;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.table td {
+    background-color: var(--white);
 }
 
 .table td a {
     margin: 5px;
 }
 
-/* Alerta de mensagens */
-.alert {
+.form-inline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-inline input {
+    margin-right: 10px;
+    width: 300px;
+    padding: 10px;
     border-radius: 5px;
-    margin: 20px auto;
+    border: 1px solid var(--border-color);
+}
+
+.form-inline button {
+    width: auto;
+    padding: 12px 24px;
+    background-color: var(--secondary-color);
+    border: none;
+    color: var(--white);
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-inline button:hover {
+    background-color: #e53e3e;
+    transform: translateY(-2px);
+}
+
+.form-inline button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .table th, .table td {
+        padding: 10px;
+    }
+
+    .form-inline input {
+        width: 100%;
+    }
+
+    .form-inline button {
+        width: 100%;
+    }
+}
+
+.alert {
     max-width: 600px;
+    margin: 20px auto;
     text-align: center;
 }
 
 .alert-success {
-    background-color: #d4edda;
+    background-color: var(--success-color);
     color: #155724;
     border: 1px solid #c3e6cb;
 }
 
 .alert-danger {
-    background-color: #f8d7da;
+    background-color: var(--danger-color);
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
 
-.btn-aliexpress {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: #ff4747;
-    color: #fff;
-    font-family: 'Segoe UI', 'Arial', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    text-decoration: none;
-    border: none;
-    outline: none;
-    border-radius: 30px;
+.table td i {
+    font-size: 18px;
+    color: #007bff;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: color 0.3s ease;
 }
 
-.btn-aliexpress:hover {
-    background-color: #e63e3e;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+.table td i:hover {
+    color: #0056b3;
 }
 
-.btn-aliexpress:active {
-    transform: translateY(0);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+.table td .delete {
+    color: #dc3545;
+}
+
+.table td .delete:hover {
+    color: #c82333;
+}
+
+.table td .edit {
+    color: #28a745;
+}
+
+.table td .edit:hover {
+    color: #218838;
+}
+
+.icon {
+    color: black !important;
+    display: inline;
+}
+
+.btn-custom-actions {
+    margin-left: 5px;
+    padding: 0.375rem 0.75rem;
+    font-size: 16px;
+    border: none;
+    background: none;
+    color: inherit;
+}
+
+.btn-warning i, .btn-danger i {
+    font-size: 18px;
+}
+
+.btn-danger {
+    border: none !important;
+    background: none !important;
+}
+
+[data-toggle="tooltip"] {
+    cursor: pointer;
 }

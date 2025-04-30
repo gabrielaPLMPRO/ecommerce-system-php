@@ -32,13 +32,12 @@ $fornecedor = $fornecedor[0];
         $classeAlerta = in_array($msg, ['inserido', 'alterado', 'excluido']) ? 'alert-success' : 'alert-danger';
         ?>
         <?php if ($mensagem): ?>
-            <div class="alert <?= $classeAlerta ?> text-center mx-auto" style="max-width: 600px;" role="alert">
+            <div class="alert <?= $classeAlerta ?>" role="alert">
                 <?= $mensagem ?>
             </div>
         <?php endif; ?>
     <?php endif; ?>
 </div>
-
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="../includes/style.css" rel="stylesheet">
@@ -51,7 +50,6 @@ $fornecedor = $fornecedor[0];
             <input type="hidden" name="id" value="<?= $fornecedor['id'] ?>">
             <input type="hidden" name="endereco_id" value="<?= $fornecedor['endereco_id'] ?>">
 
-            <!-- Dados do Fornecedor -->
             <div class="form-group">
                 <label for="nome">Nome do Fornecedor</label>
                 <input type="text" class="form-control" id="nome" name="nome" value="<?= htmlspecialchars($fornecedor['nome']) ?>" required>
@@ -74,7 +72,6 @@ $fornecedor = $fornecedor[0];
 
             <hr>
 
-            <!-- Endereço -->
             <h5 class="text-center mb-3">Endereço do Fornecedor</h5>
 
             <div class="form-group">
