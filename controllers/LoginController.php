@@ -60,6 +60,29 @@ class LoginController {
             return false;
         }
     }
+    public function consultar($termo) {
+        return Usuario::buscar($this->conn, $termo);
+    }
+
+    public function listarTodos() {
+        return Usuario::listar($this->conn);
+    }
+    
+    public function alterar($id, $dados) {
+        $usuario = new Usuario();
+        $usuario->id = $id;
+        $usuario->nome = $dados['nome'];
+        $usuario->email = $dados['email'];
+        $usuario->senha = md5($dados['email'].$dados['senha']);
+        $usuario->tipo = $dados['tipo'];
+        
+        return $usuario->atualizar($this->conn);
+    }
+    public function excluir($id) {
+        $usuario = new Usuario();
+        $usuario->id=$id; 
+        return $usuario->excluir($this->conn);
+    }
     
 }
 
@@ -87,12 +110,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             case 'alterar':
                 $controller->alterar($_POST['id'], $_POST);
-                header('Location: ../views/cadastro.php?msg=alterado');
+                header('Location: ../views/usuario_listar.php?msg=alterado');
                 break;
 
             case 'excluir':
-                $controller->excluir($_POST['id']);
-                header('Location: ../views/cadastro.php?msg=excluido');
+                if($controller->excluir($_POST['id'])){
+                    header('Location: ../views/usuario_listar.php?msg=excluido');
+                }
+                else{
+                    header('Location: ../views/usuario_listar.php?msg=erro');
+                }
+                
+
                 break;
         }
     }

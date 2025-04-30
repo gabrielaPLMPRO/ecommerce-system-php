@@ -47,6 +47,63 @@ class Usuario {
             'cliente'
         ]);
     }
+    public static function listar($conn) {
+        $sql = "SELECT * FROM usuarios 
+                ORDER BY nome ASC";
+        $stmt = $conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public static function buscar($conn, $termo) {
+        $sql = "SELECT * FROM usuarios 
+                WHERE id||nome ILIKE :termo";
+        
+        $stmt = $conn->prepare($sql);
+    
+        $likeTerm = "%" . $termo . "%";
+        $stmt->bindValue(':termo', $likeTerm);
+ 
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function atualizar($conn) {
+        try {
+            $conn->beginTransaction();
+    
+            $sqlUsuario = "UPDATE usuarios 
+                              SET nome = ?, email = ?, senha = ?, tipo = ?
+                              WHERE id = ?";
+                              
+            $stmt = $conn->prepare($sqlUsuario);
+            $stmt->execute([
+                $this->nome,
+                $this->email,
+                $this->senha,
+                $this->tipo,
+                $this->id
+            ]);
+    
+            $conn->commit();
+            return true;
+    
+        } catch (Exception $e) {
+            $conn->rollBack();
+            return false;
+        }
+    }
+    public function excluir($conn) {
+        $conn->beginTransaction();
 
+        try {
+            $stmt = $conn->prepare("DELETE FROM usuarios WHERE id = ?");
+            $stmt->execute([$this->id]);
+
+            $conn->commit();
+            return true;
+
+        } catch (Exception $e) {
+            $conn->rollBack();
+            return false;
+        }
+    }
 }
 ?>

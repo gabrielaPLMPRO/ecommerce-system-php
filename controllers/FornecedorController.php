@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             case 'excluir':
                 $controller->excluir($_POST['id']);
-                header('Location: ../views/fornecedor.php?msg=excluido');
+                header('Location: ../views/fornecedor_listar.php?msg=excluido');
                 break;
         }
     }

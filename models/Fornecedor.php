@@ -105,20 +105,12 @@ class Fornecedor {
     public static function buscar($conn, $termo) {
         $sql = "SELECT f.*, e.* FROM fornecedores f
                 JOIN endereco e ON f.endereco_id = e.id
-                WHERE f.nome ILIKE :termo";
-        
-        if (is_numeric($termo)) {
-            $sql .= " OR f.id = :termo_exato";
-        }
+                WHERE f.id||f.nome ILIKE :termo";
         
         $stmt = $conn->prepare($sql);
     
         $likeTerm = "%" . $termo . "%";
         $stmt->bindValue(':termo', $likeTerm);
-    
-        if (is_numeric($termo)) {
-            $stmt->bindValue(':termo_exato', $termo, PDO::PARAM_INT);
-        }
     
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
