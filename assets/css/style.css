@@ -360,3 +360,31 @@ h2 {
 [data-toggle="tooltip"] {
     cursor: pointer;
 }
+.btn-aliexpress {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #ff4747;
+    color: #fff;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;              /* remove borda */
+    outline: none;             /* remove contorno de foco */
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+  
+.btn-aliexpress:hover {
+    background-color: #e63e3e;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+}
+  
+.btn-aliexpress:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
