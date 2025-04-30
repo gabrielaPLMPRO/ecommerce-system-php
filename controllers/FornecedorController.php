@@ -12,10 +12,8 @@ class FornecedorController {
 
     public function inserir($dados) {
         try {
-            // Iniciar transação
             $this->conn->beginTransaction();
 
-            // Inserir Endereço
             $endereco = new Endereco();
             $endereco->rua = $dados['rua'];
             $endereco->numero = $dados['numero'];
@@ -86,10 +84,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 break;
 
-            case 'alterar':
-                $controller->alterar($_POST['id'], $_POST);
-                header('Location: ../views/fornecedor.php?msg=alterado');
-                break;
+                case 'alterar':
+                    if ($controller->alterar($_POST['id'], $_POST)) {
+                        header('Location: ../views/fornecedor_listar.php?msg=alterado');
+                    } else {
+                        header('Location: ../views/editar_fornecedor.php?id=' . $_POST['id'] . '&msg=erro');
+                    }
+                    break;
 
             case 'excluir':
                 $controller->excluir($_POST['id']);

@@ -29,5 +29,109 @@ class Fornecedor {
             $this->endereco_id
         ]);
     }
+
+    public function atualizar($conn) {
+        try {
+            $conn->beginTransaction();
+    
+            $sqlFornecedor = "UPDATE fornecedores 
+                              SET nome = ?, descricao = ?, telefone = ?, email = ?
+                              WHERE id = ?";
+            $stmt = $conn->prepare($sqlFornecedor);
+            $stmt->execute([
+                $this->nome,
+                $this->descricao,
+                $this->telefone,
+                $this->email,
+                $this->id
+            ]);
+    
+            $sqlEndereco = "UPDATE endereco 
+                            SET rua = ?, numero = ?, complemento = ?, bairro = ?, cidade = ?, estado = ?, cep = ?
+                            WHERE id = ?";
+            $stmt = $conn->prepare($sqlEndereco);
+            $stmt->execute([
+                $_POST['rua'],
+                $_POST['numero'],
+                $_POST['complemento'],
+                $_POST['bairro'],
+                $_POST['cidade'],
+                $_POST['estado'],
+                $_POST['cep'],
+                $this->endereco_id
+            ]);
+    
+            $conn->commit();
+            return true;
+    
+        } catch (Exception $e) {
+            $conn->rollBack();
+            return false;
+        }
+    }
+
+    public function excluir($conn) {
+        $stmt = $conn->prepare("SELECT endereco_id FROM fornecedores WHERE id = ?");
+        $stmt->execute([$this->id]);
+        $endereco = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$endereco) return false;
+
+        $conn->beginTransaction();
+
+        try {
+            $stmt = $conn->prepare("DELETE FROM fornecedores WHERE id = ?");
+            $stmt->execute([$this->id]);
+
+            $stmt = $conn->prepare("DELETE FROM endereco WHERE id = ?");
+            $stmt->execute([$endereco['endereco_id']]);
+
+            $conn->commit();
+            return true;
+
+        } catch (Exception $e) {
+            $conn->rollBack();
+            return false;
+        }
+    }
+
+    public static function listar($conn) {
+        $sql = "SELECT f.*, e.* FROM fornecedores f
+                JOIN endereco e ON f.endereco_id = e.id
+                ORDER BY f.nome ASC";
+        $stmt = $conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public static function buscar($conn, $termo) {
+        $sql = "SELECT f.*, e.* FROM fornecedores f
+                JOIN endereco e ON f.endereco_id = e.id
+                WHERE f.nome ILIKE :termo";
+        
+        if (is_numeric($termo)) {
+            $sql .= " OR f.id = :termo_exato";
+        }
+        
+        $stmt = $conn->prepare($sql);
+    
+        $likeTerm = "%" . $termo . "%";
+        $stmt->bindValue(':termo', $likeTerm);
+    
+        if (is_numeric($termo)) {
+            $stmt->bindValue(':termo_exato', $termo, PDO::PARAM_INT);
+        }
+    
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+
+    public static function buscarPorId($conn, $id) {
+        $sql = "SELECT f.*, e.* FROM fornecedores f
+                JOIN endereco e ON f.endereco_id = e.id
+                WHERE f.id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
-?>

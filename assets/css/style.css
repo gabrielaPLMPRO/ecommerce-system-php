@@ -13,18 +13,18 @@
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, transform 0.2s ease;
-  }
+}
   
-  .btn-aliexpress:hover {
+.btn-aliexpress:hover {
     background-color: #e63e3e;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  }
+}
   
-  .btn-aliexpress:active {
+.btn-aliexpress:active {
     transform: translateY(0);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-  }
+}
 
 * {
     margin: 0;
@@ -177,4 +177,104 @@ h2 {
     color: #333;
     margin-bottom: 30px;
     text-align: center;
+}
+/* Adicionando ao arquivo CSS */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.card-form {
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+h2 {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.btn-custom {
+    background-color: #ff4747;
+    border: none;
+}
+
+.btn-custom:hover {
+    background-color: #e53e3e;
+}
+
+.table {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table th, .table td {
+    text-align: center;
+    padding: 15px;
+}
+
+.table th {
+    background-color: #ff5800;
+    color: white;
+}
+
+.table td a {
+    margin: 5px;
+}
+
+/* Alerta de mensagens */
+.alert {
+    border-radius: 5px;
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: center;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.btn-aliexpress {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #ff4747;
+    color: #fff;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-aliexpress:hover {
+    background-color: #e63e3e;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.btn-aliexpress:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }

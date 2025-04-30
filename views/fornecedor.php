@@ -1,5 +1,26 @@
 <?php include('../includes/header.php'); ?>
 
+<?php if (isset($_GET['msg'])): ?>
+    <?php
+    $msg = $_GET['msg'];
+    $mensagens = [
+        'inserido' => 'Fornecedor inserido com sucesso!',
+        'alterado' => 'Fornecedor alterado com sucesso!',
+        'excluido' => 'Fornecedor excluído com sucesso!',
+        'erro' => 'Erro ao realizar a operação!',
+    ];
+
+    $mensagem = $mensagens[$msg] ?? '';
+    $classeAlerta = in_array($msg, ['inserido', 'alterado', 'excluido']) ? 'alert-success' : 'alert-danger';
+    ?>
+
+    <?php if ($mensagem): ?>
+        <div class="alert <?= $classeAlerta ?>" role="alert">
+            <?= $mensagem ?>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
+
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="../includes/style.css" rel="stylesheet">
 
