@@ -4,13 +4,13 @@ CREATE DATABASE virtual_store;
 CREATE TABLE IF NOT EXISTS endereco
 (
     id SERIAL PRIMARY KEY,
-    rua VARCHAR(20),
-    numero VARCHAR(10),
-    complemento VARCHAR(100),
-    bairro VARCHAR(50),
+    rua VARCHAR(200),
+    numero VARCHAR(200),
+    complemento VARCHAR(200),
+    bairro VARCHAR(200),
     cep varchar(10),
-    cidade VARCHAR(50),
-    estado VARCHAR(50),
+    cidade VARCHAR(200),
+    estado VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

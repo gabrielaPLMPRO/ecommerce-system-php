@@ -65,8 +65,11 @@ $usuario = $usuario[0];
             </div>
 
             <div class="form-group">
-                <label for="tipo">Tipo</label>
-                <input type="text" class="form-control" id="tipo" name="tipo" value="<?= htmlspecialchars($usuario['tipo']) ?>" required>
+                <label for="tipo">Tipo de Usuário</label>
+                <select name="tipo" id="tipo" class="form-control">
+                    <option value="cliente" <?php echo ($usuario['tipo'] === 'cliente') ? 'selected' : ''; ?>>Cliente</option>
+                    <option value="admin" <?php echo ($usuario['tipo'] === 'admin') ? 'selected' : ''; ?>>Admin</option>
+                </select>
             </div>
 
             <hr>

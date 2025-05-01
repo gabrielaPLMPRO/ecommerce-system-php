@@ -1,11 +1,11 @@
 <?php
-require_once '../controllers/LoginController.php';
-$controller = new LoginController();
+require_once '../controllers/ProdutoController.php';
+$controller = new ProdutoController();
 
 if (isset($_GET['busca']) && !empty($_GET['busca'])) {
-    $usuarios = $controller->consultar($_GET['busca']);
+    $produtos = $controller->consultar($_GET['busca']);
 } else {
-    $usuarios = $controller->listarTodos();
+    $produtos = $controller->listarTodos();
 }
 ?>
 
@@ -18,24 +18,24 @@ if (isset($_GET['busca']) && !empty($_GET['busca'])) {
 
 <div class="container mt-4">
     <div class="card-form">
-        <h2>Usuários</h2>
+        <h2>Produtos</h2>
 
         <!-- Formulário de Busca -->
         <form method="GET" class="form-inline mb-3">
-            <input type="text" name="busca" class="form-control mr-2" placeholder="Buscar por nome ou ID" value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
+            <input type="text" name="busca" class="form-control mr-2" placeholder="Buscar por nome, ID ou descrição" value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
             <button type="submit" class="btn btn-custom">Buscar</button>
         </form>
-        <a href="usuario.php" class="btn-aliexpress">
-            <i class="fas fa-plus"></i> Novo Usuário
+        <a href="produto.php" class="btn-aliexpress">
+            <i class="fas fa-plus"></i> Novo Produto
         </a>
 
         <?php if (isset($_GET['msg'])): ?>
         <?php
         $msg = $_GET['msg'];
         $mensagens = [
-            'inserido' => 'Usuário inserido com sucesso!',
-            'alterado' => 'Usuário alterado com sucesso!',
-            'excluido' => 'Usuário excluído com sucesso!',
+            'inserido' => 'Produto inserido com sucesso!',
+            'alterado' => 'Produto alterado com sucesso!',
+            'excluido' => 'Produto excluído com sucesso!',
             'erro' => 'Erro ao realizar a operação!',
         ];
 
@@ -57,26 +57,26 @@ if (isset($_GET['busca']) && !empty($_GET['busca'])) {
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
-                        <th>Email</th>
-                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Fornecedor</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($usuarios): ?>
-                        <?php foreach ($usuarios as $u): ?>
+                    <?php if ($produtos): ?>
+                        <?php foreach ($produtos as $p): ?>
                             <tr>
-                                <td><?= $u['id'] ?></td>
-                                <td><?= htmlspecialchars($u['nome']) ?></td>
-                                <td><?= htmlspecialchars($u['email']) ?></td>
-                                <td><?= htmlspecialchars($u['tipo']) ?></td>
+                                <td><?= $p['id'] ?></td>
+                                <td><?= htmlspecialchars($p['nome']) ?></td>
+                                <td><?= htmlspecialchars($p['descricao']) ?></td>
+                                <td><?= htmlspecialchars($p['fornecedor']) ?></td>
                                 <td>
-                                    <a href="editar_usuario.php?id=<?= $u['id'] ?>" class="btn btn-warning btn-sm btn-custom-actions" data-toggle="tooltip" title="Editar">
+                                    <a href="editar_produto.php?id=<?= $p['id'] ?>" class="btn btn-warning btn-sm btn-custom-actions" data-toggle="tooltip" title="Editar">
                                         <i class="fas fa-edit icon"></i>
                                     </a>
-                                    <form action="../controllers/LoginController.php" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');">
+                                    <form action="../controllers/ProdutoController.php" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
                                         <input type="hidden" name="acao" value="excluir">
-                                        <input type="hidden" name="id" value="<?= $u['id'] ?>">
+                                        <input type="hidden" name="id" value="<?= $p['id'] ?>">
                                         <button type="submit" class="btn btn-danger btn-sm btn-custom-actions" data-toggle="tooltip" title="Excluir">
                                             <i class="fas fa-trash-alt icon"></i>
                                         </button>
@@ -85,7 +85,7 @@ if (isset($_GET['busca']) && !empty($_GET['busca'])) {
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <tr><td colspan="6">Nenhum usuário encontrado.</td></tr>
+                        <tr><td colspan="6">Nenhum produto encontrado.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>

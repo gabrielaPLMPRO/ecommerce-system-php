@@ -40,12 +40,24 @@ class Usuario {
     public function salvar($conn) {
         $sql = "INSERT INTO usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        return $stmt->execute([
-            $this->nome,
-            $this->email,
-            $this->senha,
-            'cliente'
-        ]);
+
+        if($this->tipo==null){
+            return $stmt->execute([
+                $this->nome,
+                $this->email,
+                $this->senha,
+                'cliente'
+            ]);
+        }
+        else{
+            return $stmt->execute([
+                $this->nome,
+                $this->email,
+                $this->senha,
+                $this->tipo
+            ]);
+        }
+        
     }
     public static function listar($conn) {
         $sql = "SELECT * FROM usuarios 

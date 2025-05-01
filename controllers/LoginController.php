@@ -18,6 +18,9 @@ class LoginController {
             $usuario->nome = $dados['nome'];
             $usuario->email = $dados['email'];
             $usuario->senha = md5($dados['email'].$dados['senha']);
+            if(!$dados['tipo']==null){
+                $usuario->tipo=$dados['tipo'];
+            }
 
             $usuario->salvar($this->conn);
 
