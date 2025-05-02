@@ -37,6 +37,21 @@ class Produto {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public static function buscarPorId($conn, $id) {
+        $sql = "SELECT p.id, p.nome, p.descricao, p.foto, p.fornecedor_id, f.nome AS fornecedor_nome
+                FROM produtos p
+                LEFT JOIN fornecedores f ON p.fornecedor_id = f.id
+                WHERE p.id = :id";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+
     public function atualizar($conn) {
         try {
             $conn->beginTransaction();

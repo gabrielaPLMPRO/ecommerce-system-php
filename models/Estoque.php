@@ -35,24 +35,14 @@ class Estoque {
         }
     }
 
-    public static function buscarPorProdutoId($produto_id) {
-        $pdo = getConnection();
-
-        if ($pdo === null) {
-            echo "Erro: Não foi possível conectar ao banco de dados.";
-            exit;
-        }
-
-        try {
-            $sql = "SELECT * FROM estoque WHERE produto_id = :produto_id";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute(['produto_id' => $produto_id]);
-
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            echo "Erro ao buscar estoque por produto_id: " . $e->getMessage();
-            exit;
-        }
+    public static function buscarPorProdutoId($conn, $produto_id) {
+        $sql = "SELECT * FROM estoque WHERE produto_id = :produto_id";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':produto_id', $produto_id, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function atualizar() {
@@ -77,24 +67,27 @@ class Estoque {
         }
     }
 
-    public function excluir() {
+    public static function excluirPorProdutoId($produto_id) {
         $pdo = getConnection();
-
+    
         if ($pdo === null) {
             echo "Erro: Não foi possível conectar ao banco de dados.";
             exit;
         }
-
+    
         try {
             $sql = "DELETE FROM estoque WHERE produto_id = :produto_id";
+    
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':produto_id', $this->produto_id);
-
+            $stmt->bindParam(':produto_id', $produto_id, PDO::PARAM_INT);
+    
             return $stmt->execute();
+    
         } catch (PDOException $e) {
             echo "Erro ao excluir estoque: " . $e->getMessage();
-            exit;
+            return false;
         }
     }
+    
 }
 ?>

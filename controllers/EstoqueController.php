@@ -1,42 +1,78 @@
 <?php
 require_once '../models/Estoque.php';
 require_once '../models/Produto.php';
+require_once '../includes/db.connection.php';
 
-class EstoqueController {
-
-    public function listar() {
+class EstoqueController
+{
+    public function listar()
+    {
         $busca = $_GET['busca'] ?? '';
-        $estoques = Estoque::listarComProduto($busca);
-        return $estoques;
+        return Estoque::listarComProduto($busca);
     }
 
-    public function editar($produto_id) {
-        $estoque = Estoque::buscarPorProdutoId($produto_id);
-        $produto = Produto::buscarPorId($produto_id);
+    public function editar($produto_id)
+    {
+        $conn = getConnection();
+        $estoque = Estoque::buscarPorProdutoId($conn, $produto_id);
+        $produto = Produto::buscarPorId($conn, $produto_id);
         return [$estoque, $produto];
     }
 
-    public function atualizar($produto_id, $preco, $estoque) {
+    public function atualizar($produto_id, $preco, $estoque)
+    {
         $estoqueObj = new Estoque();
         $estoqueObj->produto_id = $produto_id;
         $estoqueObj->preco = $preco;
         $estoqueObj->estoque = $estoque;
-        
-        if ($estoqueObj->atualizar()) {
-            header('Location: estoque.php?msg=alterado');
-        } else {
-            header('Location: estoque.php?msg=erro');
-        }
+
+        return $estoqueObj->atualizar();
     }
-    
-    public function excluir($produto_id) {
+
+    public function excluir($produto_id)
+    {
         $estoque = new Estoque();
-        $estoque->produto_id = $produto_id;
-        if ($estoque->excluir()) {
-            header('Location: estoque.php?msg=excluido');
+        if ($estoque->excluirPorProdutoId($produto_id)) {
+            header('Location: ../views/estoque.php?msg=excluido');
         } else {
-            header('Location: estoque.php?msg=erro');
+            header('Location: ../views/estoque.php?msg=erro');
+        }
+        exit;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $acao = $_POST['acao'] ?? '';
+    $produto_id = $_POST['produto_id'] ?? null;
+
+    if ($acao === 'excluir' && $produto_id !== null) {
+        $controller = new EstoqueController();
+        $controller->excluir($produto_id);
+        exit;
+    }
+
+    if ($acao === 'alterar') {
+        $preco = $_POST['preco'] ?? null;
+        $estoque = $_POST['estoque'] ?? null;
+
+        if ($produto_id && $preco !== null && $estoque !== null) {
+            $precoFormatado = str_replace(',', '.', $preco);
+
+            $controller = new EstoqueController();
+            try {
+                if ($controller->atualizar($produto_id, $precoFormatado, $estoque)) {
+                    header('Location: ../views/estoque.php?msg=alterado');
+                } else {
+                    header('Location: ../views/editar_estoque.php?produto_id=' . $produto_id . '&msg=erro');
+                }
+            } catch (Exception $e) {
+                error_log('Erro ao atualizar estoque: ' . $e->getMessage());
+                header('Location: ../views/editar_estoque.php?produto_id=' . $produto_id . '&msg=erro');
+            }
+            exit;
+        } else {
+            header('Location: ../views/estoque.php?msg=erro');
+            exit;
         }
     }
 }
-?>
