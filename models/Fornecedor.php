@@ -74,38 +74,47 @@ class Fornecedor {
         $stmt = $conn->prepare("SELECT endereco_id FROM fornecedores WHERE id = ?");
         $stmt->execute([$this->id]);
         $endereco = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$endereco) return false;
-
+    
+        if (!$endereco) {
+            return false;
+        }
+    
         $conn->beginTransaction();
-
+    
         try {
             $stmt = $conn->prepare("DELETE FROM fornecedores WHERE id = ?");
             $stmt->execute([$this->id]);
-
+    
             $stmt = $conn->prepare("DELETE FROM endereco WHERE id = ?");
             $stmt->execute([$endereco['endereco_id']]);
-
+    
             $conn->commit();
             return true;
-
+    
         } catch (Exception $e) {
+            error_log("Erro ao excluir fornecedor: " . $e->getMessage());
             $conn->rollBack();
             return false;
         }
     }
 
     public static function listar($conn) {
-        $sql = "SELECT f.*, e.* FROM fornecedores f
-                JOIN endereco e ON f.endereco_id = e.id
-                ORDER BY f.nome ASC";
+        $sql = "SELECT f.id AS fornecedor_id, f.nome, f.descricao, f.telefone, f.email, 
+                           f.endereco_id, f.created_at, f.updated_at,
+                           e.id AS endereco_id, e.rua, e.numero, e.complemento, 
+                           e.bairro, e.cep, e.cidade, e.estado
+                    FROM fornecedores f
+                    JOIN endereco e ON f.endereco_id = e.id
+                    ORDER BY f.nome ASC";
         $stmt = $conn->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    
     public static function buscar($conn, $termo) {
         $sql = "SELECT f.*, e.* FROM fornecedores f
                 JOIN endereco e ON f.endereco_id = e.id
-                WHERE f.id||f.nome ILIKE :termo";
+                WHERE f.id::text ILIKE :termo OR f.nome ILIKE :termo";
         
         $stmt = $conn->prepare($sql);
     

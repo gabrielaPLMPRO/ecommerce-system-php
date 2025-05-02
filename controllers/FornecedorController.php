@@ -59,11 +59,17 @@ class FornecedorController {
 
     public function excluir($id) {
         $fornecedor = new Fornecedor($id);
-        return $fornecedor->excluir($this->conn);
+        if ($fornecedor->excluir($this->conn)) {
+            header('Location: ../views/fornecedor_listar.php?msg=excluido');
+        } else {
+            header('Location: ../views/fornecedor_listar.php?msg=erro');
+        }
+        exit; 
     }
 
     public function consultar($termo) {
-        return Fornecedor::buscar($this->conn, $termo);
+        $resultado = Fornecedor::buscar($this->conn, $termo);
+        return $resultado;
     }
 
     public function listarTodos() {
@@ -84,13 +90,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 break;
 
-                case 'alterar':
-                    if ($controller->alterar($_POST['id'], $_POST)) {
-                        header('Location: ../views/fornecedor_listar.php?msg=alterado');
-                    } else {
-                        header('Location: ../views/editar_fornecedor.php?id=' . $_POST['id'] . '&msg=erro');
-                    }
-                    break;
+            case 'alterar':
+                if ($controller->alterar($_POST['id'], $_POST)) {
+                    header('Location: ../views/fornecedor_listar.php?msg=alterado');
+                } else {
+                    header('Location: ../views/editar_fornecedor.php?id=' . $_POST['id'] . '&msg=erro');
+                }
+                break;
 
             case 'excluir':
                 $controller->excluir($_POST['id']);
