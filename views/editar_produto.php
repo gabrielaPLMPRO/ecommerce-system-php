@@ -71,8 +71,8 @@ $produto = $produto[0];
                    
 
                     foreach ($listaFornecedores as $fornecedor) {
-                        $selected=($fornecedor['id']==$produto['fornecedor_id'])?'selected':'';
-                        echo '<option value="' . htmlspecialchars($fornecedor['id']) .'" '. $selected.'>' . htmlspecialchars($fornecedor['nome']) . '</option>';
+                        $selected=($fornecedor['fornecedor_id']==$produto['fornecedor_id'])?'selected':'';
+                        echo '<option value="' . htmlspecialchars($fornecedor['fornecedor_id']) .'" '. $selected.'>' . htmlspecialchars($fornecedor['nome']) . '</option>';
                     }
                     ?>
                 </select>

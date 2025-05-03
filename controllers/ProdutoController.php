@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($controller->inserir($_POST)) {
                     header('Location: ../views/produto_listar.php?msg=inserido');
                 } else {
-                    header('Location: ../views/cadastrar_produto.php?msg=erro');
+                    header('Location: ../views/produto_listar.php?msg=erro');
                 }
                 break;
 

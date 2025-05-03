@@ -55,7 +55,7 @@ $listaFornecedores = $fornecedores->listarTodos();
                    
 
                     foreach ($listaFornecedores as $fornecedor) {
-                        echo '<option value="' . htmlspecialchars($fornecedor['id']) . '">' . htmlspecialchars($fornecedor['nome']) . '</option>';
+                        echo '<option value="' . htmlspecialchars($fornecedor['fornecedor_id']) . '">' . htmlspecialchars($fornecedor['nome']) . '</option>';
                     }
                     ?>
                 </select>
