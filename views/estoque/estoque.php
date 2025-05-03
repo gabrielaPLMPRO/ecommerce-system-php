@@ -16,7 +16,6 @@ $estoques = Estoque::listarComProduto($busca);
     <div class="card-form">
         <h2>Manutenção de Estoque</h2>
 
-        <!-- Formulário de Busca -->
         <form method="GET" class="form-inline mb-3">
             <input type="text" name="busca" class="form-control mr-2" placeholder="Buscar por nome ou ID do produto" value="<?= htmlspecialchars($busca) ?>">
             <button type="submit" class="btn btn-custom">Buscar</button>
