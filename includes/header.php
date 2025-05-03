@@ -1,43 +1,47 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AquiExpress</title>
-    <link rel="icon" href="../assets/images/logo.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AquiExpress</title>
+  <link rel="icon" href="../assets/images/logo.ico" type="image/x-icon">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/images/logo.ico">
 </head>
+
 <body>
-<header>
-  <div class="logo-fixed">
-    <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-      <img src="../assets/images/logo.png" alt="Logo da Loja">
-    </a>
-  </div>
-  <div class="header-container">
-    <nav class="main-nav">
-      <ul>
-        <li><a href="index.php">Home</a></li>
-        <li><a href="#">Produtos</a></li>
-        <li><a href="#">Sobre</a></li>
-        <li><a href="#">Contato</a></li>
-        <?php	
-                    include_once "comum.php";
-                    
-                    if ( is_session_started() === FALSE ) {
-                        session_start();
-                    }	
-                    
-                    if(isset($_SESSION["nome_usuario"])) {
-                        echo "<li><span>Você está logado como " . $_SESSION["nome_usuario"];		
-                        echo "<a href='executa_logout.php'> Logout </a></span></li>";
-                    } else {
-                        echo "<li><span><a href='login.php'> Efetuar Login </a></span></li>";
-                    }
-                    ?>	
-      </ul>
-    </nav>
-  </div>
-</header>
+  <header>
+    <div class="logo-fixed">
+      <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
+        <img src="../assets/images/logo.png" alt="Logo da Loja">
+      </a>
+    </div>
+    <div class="header-container">
+      <nav class="main-nav">
+        <ul>
+          <li><a href="index.php">Home</a></li>
+          <li><a href="#">Produtos</a></li>
+          <li><a href="#">Sobre</a></li>
+          <li><a href="#">Contato</a></li>
+          <?php
+          include_once "comum.php";
+
+          if (is_session_started() === FALSE) {
+            session_start();
+          }
+
+          if (isset($_SESSION["nome_usuario"])) {
+            echo "<li><span>Você está logado como " . $_SESSION["nome_usuario"];
+            echo "<a href='executa_logout.php'> Logout </a></span></li>";
+          } else {
+            echo "<li><span><a href='login.php'> Efetuar Login </a></span></li>";
+          }
+          ?>
+        </ul>
+      </nav>
+    </div>
+  </header>
 </body>
+
 </html>

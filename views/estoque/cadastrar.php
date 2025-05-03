@@ -1,15 +1,16 @@
 <?php
-require_once '../models/Estoque.php';
-require_once '../models/Produto.php';
+require_once '../../models/Estoque.php';
+require_once '../../models/Produto.php';
 
 $busca = $_GET['busca'] ?? '';
 $estoques = Estoque::listarComProduto($busca);
 ?>
 
-<?php include('../includes/header.php'); ?>
+<?php include('../../includes/header.php'); ?>
 
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 
 <div class="container mt-4">
@@ -57,10 +58,10 @@ $estoques = Estoque::listarComProduto($busca);
                             <td>R$ <?= number_format($e['preco'], 2, ',', '.') ?></td>
                             <td><?= $e['estoque'] ?></td>
                             <td>
-                                <a href="editar_estoque.php?produto_id=<?= $e['produto_id'] ?>" class="btn btn-warning btn-sm btn-custom-actions" data-toggle="tooltip" title="Editar">
+                                <a href="editar.php?produto_id=<?= $e['produto_id'] ?>" class="btn btn-warning btn-sm btn-custom-actions" data-toggle="tooltip" title="Editar">
                                     <i class="fas fa-edit icon"></i>
                                 </a>
-                                <form action="../controllers/EstoqueController.php" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este item de estoque?');">
+                                <form action="../../controllers/EstoqueController.php" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este item de estoque?');">
                                     <input type="hidden" name="acao" value="excluir">
                                     <input type="hidden" name="produto_id" value="<?= $e['produto_id'] ?>">
                                     <button type="submit" class="btn btn-danger btn-sm btn-custom-actions" data-toggle="tooltip" title="Excluir">
@@ -76,7 +77,7 @@ $estoques = Estoque::listarComProduto($busca);
     </div>
 </div>
 
-<?php include('../includes/footer.php'); ?>
+<?php include('../../includes/footer.php'); ?>
 
 <script>
     $(document).ready(function () {

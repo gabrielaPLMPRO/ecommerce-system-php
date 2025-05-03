@@ -1,7 +1,7 @@
 <?php
-require_once '../models/Estoque.php';
-require_once '../models/Produto.php';
-require_once '../includes/db.connection.php';
+require_once __DIR__ . '/../models/Estoque.php';
+require_once __DIR__ . '/../models/Produto.php';
+require_once  __DIR__ .'/../includes/db.connection.php';
 
 class EstoqueController
 {
@@ -33,9 +33,9 @@ class EstoqueController
     {
         $estoque = new Estoque();
         if ($estoque->excluirPorProdutoId($produto_id)) {
-            header('Location: ../views/estoque/estoque.php?msg=excluido');
+            header('Location: ../views/estoque/cadastrar.php?msg=excluido');
         } else {
-            header('Location: ../views/estoque/estoque.php?msg=erro');
+            header('Location: ../views/estoque/cadastrar.php?msg=erro');
         }
         exit;
     }
@@ -61,17 +61,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $controller = new EstoqueController();
             try {
                 if ($controller->atualizar($produto_id, $precoFormatado, $estoque)) {
-                    header('Location: ../views/estoque/estoque.php?msg=alterado');
+                    header('Location: ../views/estoque/cadastrar.php?msg=alterado');
                 } else {
-                    header('Location: ../views/estoque/editar_estoque.php?produto_id=' . $produto_id . '&msg=erro');
+                    header('Location: ../views/estoque/editar.php?produto_id=' . $produto_id . '&msg=erro');
                 }
             } catch (Exception $e) {
                 error_log('Erro ao atualizar estoque: ' . $e->getMessage());
-                header('Location: ../views/estoque/editar_estoque.php?produto_id=' . $produto_id . '&msg=erro');
+                header('Location: ../views/estoque/editar.php?produto_id=' . $produto_id . '&msg=erro');
             }
             exit;
         } else {
-            header('Location: ../views/estoque/estoque.php?msg=erro');
+            header('Location: ../views/estoque/cadastrar.php?msg=erro');
             exit;
         }
     }

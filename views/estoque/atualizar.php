@@ -1,5 +1,5 @@
 <?php
-require_once '../controllers/EstoqueController.php';
+require_once '../../controllers/EstoqueController.php';
 
 $estoqueController = new EstoqueController();
 

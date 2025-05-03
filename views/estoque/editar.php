@@ -1,9 +1,8 @@
 <?php
-require_once '../controllers/EstoqueController.php';
+require_once '../../controllers/EstoqueController.php';
 
 $estoqueController = new EstoqueController();
 
-// Verifica se o ID do produto foi passado via GET
 if (isset($_GET['produto_id'])) {
     list($estoque, $produto) = $estoqueController->editar($_GET['produto_id']);
 } else {
@@ -12,7 +11,7 @@ if (isset($_GET['produto_id'])) {
 }
 ?>
 
-<?php include('../includes/header.php'); ?>
+<?php include('../../includes/header.php'); ?>
 
 <div class="container mt-4">
     <?php if (isset($_GET['msg'])): ?>
@@ -35,12 +34,12 @@ if (isset($_GET['produto_id'])) {
 </div>
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<link href="../includes/style.css" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
 
 <div class="container">
     <div class="card-form">
-        <h2>Editar Estoque de Produto</h2>
-        <form method="POST" action="../controllers/EstoqueController.php">
+        <h2>Editar Estoque</h2>
+        <form method="POST" action="../../controllers/EstoqueController.php">
             <input type="hidden" name="acao" value="alterar">
             <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
 
@@ -66,4 +65,4 @@ if (isset($_GET['produto_id'])) {
     </div>
 </div>
 
-<?php include('../includes/footer.php'); ?>
+<?php include('../../includes/footer.php'); ?>
