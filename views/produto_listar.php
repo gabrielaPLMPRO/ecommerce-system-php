@@ -1,4 +1,5 @@
 <?php
+include "../includes/verifica.php";
 require_once '../controllers/ProdutoController.php';
 $controller = new ProdutoController();
 

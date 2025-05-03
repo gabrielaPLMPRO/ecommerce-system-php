@@ -1,4 +1,5 @@
 <?php
+include "../includes/verifica.php";
 require_once '../controllers/FornecedorController.php';
 $controller = new FornecedorController();
 

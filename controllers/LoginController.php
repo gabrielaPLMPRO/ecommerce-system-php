@@ -50,7 +50,8 @@ class LoginController {
             else{
                 if(!strcmp(md5($dados['email'].$dados['senha']),$usuarioBuscado->senha)){
                     $_SESSION["id_usuario"]= $usuarioBuscado->id; 
-                    $_SESSION["nome_usuario"] = stripslashes($usuarioBuscado->nome); 
+                    $_SESSION["nome_usuario"] = stripslashes($usuarioBuscado->nome);
+                    $_SESSION["tipo"] = stripslashes($usuarioBuscado->tipo);
 
                     return true;
                 }
@@ -105,7 +106,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             case 'executarLogin': 
                 if ($controller->login($_POST['email'], $_POST)) {
-                    header('Location: ../views/index.php');
+                    if($_SESSION["tipo"]==="admin"){
+                        header('Location: ../views/indexAdmin.php');
+                    }
+                    else{
+                        header('Location: ../views/index.php');
+                    }
                 } else {
                     header('Location: ../views/login.php?msg=erro');
                 }

@@ -1,4 +1,7 @@
-<?php include('../includes/header.php'); ?>
+<?php 
+include('../includes/header.php'); 
+include "../includes/verifica.php";
+?>
 
 <?php if (isset($_GET['msg'])): ?>
     <?php

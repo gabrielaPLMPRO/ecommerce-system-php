@@ -1,5 +1,6 @@
 <?php
 require_once '../controllers/LoginController.php';
+include "../includes/verifica.php";
 $controller = new LoginController();
 
 if (isset($_GET['busca']) && !empty($_GET['busca'])) {
