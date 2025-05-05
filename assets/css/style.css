@@ -388,3 +388,42 @@ h2 {
     transform: translateY(0);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
+
+.dashboard-container {
+    padding: 60px 20px;
+  }
+
+  .dashboard-card {
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+    background-color: #ffffff;
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .dashboard-icon {
+    font-size: 40px;
+    color: #e60023;
+    margin-bottom: 15px;
+  }
+
+  .dashboard-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .admin-header {
+    background-color: #f8f9fa;
+    padding: 15px 0;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  body {
+    background-color: #f5f5f5;
+  }

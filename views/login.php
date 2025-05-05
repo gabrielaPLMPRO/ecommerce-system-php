@@ -18,7 +18,6 @@
         <form action="../controllers/LoginController.php" method="POST">
             <input type="hidden" name="acao" value="executarLogin">
 
-            <!-- Fornecedor -->
             <div class="form-group">
                 <label for="email">E-mail</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="email@exemplo.com" required>
@@ -31,8 +30,6 @@
 
             <hr>
 
-            <!-- Endereço -->
-       
             <div class="text-center">
             <button type="submit" class="btn-aliexpress">Login</button>
 

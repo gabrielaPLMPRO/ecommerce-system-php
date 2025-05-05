@@ -4,7 +4,7 @@ require_once __DIR__ . '/../models/Produto.php';
 require_once  __DIR__ .'/../includes/db.connection.php';
 
 class EstoqueController
-{
+{    
     public function listar()
     {
         $busca = $_GET['busca'] ?? '';
@@ -33,9 +33,9 @@ class EstoqueController
     {
         $estoque = new Estoque();
         if ($estoque->excluirPorProdutoId($produto_id)) {
-            header('Location: ../views/estoque/cadastrar.php?msg=excluido');
+            header('Location: ../views/estoque/listar.php?msg=excluido');
         } else {
-            header('Location: ../views/estoque/cadastrar.php?msg=erro');
+            header('Location: ../views/estoque/listar.php?msg=erro');
         }
         exit;
     }
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $controller = new EstoqueController();
             try {
                 if ($controller->atualizar($produto_id, $precoFormatado, $estoque)) {
-                    header('Location: ../views/estoque/cadastrar.php?msg=alterado');
+                    header('Location: ../views/estoque/listar.php?msg=alterado');
                 } else {
                     header('Location: ../views/estoque/editar.php?produto_id=' . $produto_id . '&msg=erro');
                 }
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             exit;
         } else {
-            header('Location: ../views/estoque/cadastrar.php?msg=erro');
+            header('Location: ../views/estoque/listar.php?msg=erro');
             exit;
         }
     }

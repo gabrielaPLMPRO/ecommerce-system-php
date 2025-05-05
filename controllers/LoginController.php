@@ -11,7 +11,6 @@ class LoginController {
 
     public function inserir($dados) {
         try {
-            // Iniciar transação
             $this->conn->beginTransaction();
 
             $usuario = new Usuario();
@@ -37,7 +36,6 @@ class LoginController {
         session_start();
 
         try {
-            // Iniciar transação
             $this->conn->beginTransaction();
 
             $usuario = new Usuario();
