@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../includes/db.connection.php';
 
 class Estoque {
-    public $id;
     public $preco;
     public $estoque;
     public $produto_id;

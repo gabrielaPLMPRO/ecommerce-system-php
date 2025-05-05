@@ -44,12 +44,6 @@ header {
     height: 50px;
 }
 
-.brand-name {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--white);
-}
-
 .header-container {
     flex: 1;
     display: flex;
@@ -107,19 +101,6 @@ header {
 
 .product p {
     margin: 10px 0;
-}
-
-.product button {
-    background-color: var(--primary-color);
-    color: var(--white);
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.product button:hover {
-    background-color: var(--hover-color);
 }
 
 @media (max-width: 1200px) {
@@ -369,8 +350,8 @@ h2 {
     font-size: 16px;
     font-weight: 600;
     text-decoration: none;
-    border: none;              /* remove borda */
-    outline: none;             /* remove contorno de foco */
+    border: none;
+    outline: none;
     border-radius: 30px;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

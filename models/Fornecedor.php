@@ -124,7 +124,6 @@ class Fornecedor {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
 
     public static function buscarPorId($conn, $id) {
         $sql = "SELECT f.*, e.* FROM fornecedores f

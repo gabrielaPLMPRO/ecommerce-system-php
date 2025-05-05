@@ -5,11 +5,6 @@ require_once  __DIR__ .'/../includes/db.connection.php';
 
 class EstoqueController
 {    
-    public function listar()
-    {
-        $busca = $_GET['busca'] ?? '';
-        return Estoque::listarComProduto($busca);
-    }
 
     public function editar($produto_id)
     {

@@ -4,7 +4,6 @@
  ?>
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
 <header class="admin-header">
   <h2>Painel Administrativo</h2>
@@ -13,20 +12,26 @@
 <div class="container dashboard-container">
   <div class="row g-4">
 
+  <div class="col-md-6 col-lg-4 mb-4">
+      <a href="produto.php" class="text-decoration-none text-dark">
+        <div class="dashboard-card">
+          <div class="dashboard-title">Cadastrar Produto</div>
+        </div>
+      </a>
+    </div>
+
     <div class="col-md-6 col-lg-4 mb-4">
       <a href="fornecedor.php" class="text-decoration-none text-dark">
         <div class="dashboard-card">
-          <i class="fas fa-truck dashboard-icon"></i>
           <div class="dashboard-title">Cadastrar Fornecedor</div>
         </div>
       </a>
     </div>
 
     <div class="col-md-6 col-lg-4 mb-4">
-      <a href="produto.php" class="text-decoration-none text-dark">
+      <a href="estoque/listar.php" class="text-decoration-none text-dark">
         <div class="dashboard-card">
-          <i class="fas fa-box dashboard-icon"></i>
-          <div class="dashboard-title">Cadastrar Produto</div>
+          <div class="dashboard-title">Manutenção de Estoque</div>
         </div>
       </a>
     </div>
@@ -34,7 +39,6 @@
     <div class="col-md-6 col-lg-4 mb-4">
       <a href="fornecedor_listar.php" class="text-decoration-none text-dark">
         <div class="dashboard-card">
-          <i class="fas fa-list dashboard-icon"></i>
           <div class="dashboard-title">Listar Fornecedores</div>
         </div>
       </a>
@@ -43,17 +47,7 @@
     <div class="col-md-6 col-lg-4 mb-4">
       <a href="produto_listar.php" class="text-decoration-none text-dark">
         <div class="dashboard-card">
-          <i class="fas fa-boxes dashboard-icon"></i>
           <div class="dashboard-title">Listar Produtos</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-md-6 col-lg-4 mb-4">
-      <a href="estoque/listar.php" class="text-decoration-none text-dark">
-        <div class="dashboard-card">
-          <i class="fas fa-warehouse dashboard-icon"></i>
-          <div class="dashboard-title">Gerenciar Estoque</div>
         </div>
       </a>
     </div>
@@ -61,7 +55,6 @@
     <div class="col-md-6 col-lg-4 mb-4">
       <a href="usuario_listar.php" class="text-decoration-none text-dark">
         <div class="dashboard-card">
-          <i class="fas fa-users dashboard-icon"></i>
           <div class="dashboard-title">Listar Usuários</div>
         </div>
       </a>

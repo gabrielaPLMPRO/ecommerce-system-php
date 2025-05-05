@@ -2,7 +2,6 @@
 require_once '../includes/db.connection.php';
 
 class Endereco {
-    public $id;
     public $rua;
     public $numero;
     public $complemento;
