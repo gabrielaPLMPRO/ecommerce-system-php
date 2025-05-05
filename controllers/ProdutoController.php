@@ -1,6 +1,7 @@
 <?php
 require_once '../models/Produto.php';
 require_once '../includes/db.connection.php';
+require_once '../models/Estoque.php';
 
 class ProdutoController {
     private $conn;
@@ -11,24 +12,32 @@ class ProdutoController {
 
     public function inserir($dados) {
         try {
-            // Iniciar transação
             $this->conn->beginTransaction();
-
+    
             $produto = new Produto();
             $produto->nome = $dados['nome'];
             $produto->descricao = $dados['descricao'];
             $produto->fornecedor_id = $dados['fornecedor_id'];
-
             $produto->salvar($this->conn);
-
+    
+            $estoque = new Estoque();
+            $estoque->produto_id = $produto->id;
+            $estoque->preco = isset($dados['preco']) ? $dados['preco'] : 0;
+            $estoque->estoque = isset($dados['quantidade']) ? $dados['quantidade'] : 0;
+    
+            $sql = "INSERT INTO estoque (produto_id, preco, estoque) VALUES (?, ?, ?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([$estoque->produto_id, $estoque->preco, $estoque->estoque]);
+    
             $this->conn->commit();
             return true;
-
+    
         } catch (Exception $e) {
             $this->conn->rollBack();
             return false;
         }
     }
+    
     public function consultar($termo) {
         return Produto::buscar($this->conn, $termo);
     }

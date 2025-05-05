@@ -40,7 +40,6 @@ $listaFornecedores = $fornecedores->listarTodos();
         <form action="../controllers/ProdutoController.php" method="POST">
             <input type="hidden" name="acao" value="inserir">
 
-            <!-- Fornecedor -->
             <div class="form-group">
                 <label for="nome">Nome</label>
                 <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome" required>
@@ -55,13 +54,21 @@ $listaFornecedores = $fornecedores->listarTodos();
                 <label for="fornecedor">Fornecedor</label>
                 <select name="fornecedor_id" id="fornecedor_id" class="form-control">
                     <?php
-                   
-
                     foreach ($listaFornecedores as $fornecedor) {
                         echo '<option value="' . htmlspecialchars($fornecedor['fornecedor_id']) . '">' . htmlspecialchars($fornecedor['nome']) . '</option>';
                     }
                     ?>
                 </select>
+            </div>
+
+            <div class="form-group">
+                <label for="preco">Preço</label>
+                <input type="number" step="0.01" class="form-control" id="preco" name="preco" placeholder="Digite o preço" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantidade">Quantidade em estoque</label>
+                <input type="number" class="form-control" id="quantidade" name="quantidade" placeholder="Digite a quantidade" required>
             </div>
 
             <hr>

@@ -11,11 +11,18 @@ class Produto {
     public function salvar($conn) {
         $sql = "INSERT INTO produtos (nome, descricao, fornecedor_id) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        return $stmt->execute([
+        $sucesso = $stmt->execute([
             $this->nome,
             $this->descricao,
             $this->fornecedor_id
         ]);
+        
+        if ($sucesso) {
+            $this->id = $conn->lastInsertId();
+            return true;
+        } else {
+            return false;
+        }
     }
     public static function listar($conn) {
         $sql = "SELECT p.id id, p.nome nome, p.descricao descricao, p.fornecedor_id, f.nome fornecedor FROM produtos p, fornecedores f
