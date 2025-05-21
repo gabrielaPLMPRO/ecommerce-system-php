@@ -1,20 +1,22 @@
 <?php
 
-require_once '../controllers/FornecedorController.php';
-$controller = new FornecedorController();
+include_once "../fachada.php";
 
-if (!isset($_GET['id'])) {
-    header('Location: fornecedor_listar.php?msg=erro');
-    exit;
+$id = @$_GET["id"];
+$idEndereco = @$_GET["idEndereco"];
+
+$dao = $factory->getFornecedorDAO();
+$fornecedor = $dao->buscaPorId($id);
+
+// $endereco = $dao->buscaPorId($idEndereco);
+
+if($fornecedor==null) {
+    $fornecedor = new Fornecedor( null, null, null, null, null, null);
 }
 
-$fornecedor = $controller->consultar($_GET['id']);
-if (!$fornecedor) {
-    header('Location: fornecedor_listar.php?msg=erro');
-    exit;
-}
-
-$fornecedor = $fornecedor[0];
+// if($endereco==null) {
+//     $endereco = new Fornecedor( null, null, null, null, null, null);
+// }
 ?>
 
 <?php include('../includes/header.php'); ?>
@@ -47,32 +49,33 @@ $fornecedor = $fornecedor[0];
     <div class="card-form">
         <h2>Editar Fornecedor</h2>
         <form action="../controllers/FornecedorController.php" method="POST">
-            <input type="hidden" name="acao" value="alterar">
-            <input type="hidden" name="id" value="<?= $fornecedor['id'] ?>">
-            <input type="hidden" name="endereco_id" value="<?= $fornecedor['endereco_id'] ?>">
+            <input type="hidden" name="acao" value="salvar">
+            <input type="hidden" name="id" value="<?=$fornecedor->getId()?>">
+            <input type="hidden" name="endereco_id" value="<?= $fornecedor->getEnderecoId() ?>">
 
             <div class="form-group">
                 <label for="nome">Nome do Fornecedor</label>
-                <input type="text" class="form-control" id="nome" name="nome" value="<?= htmlspecialchars($fornecedor['nome'] ?? '') ?>" required>
+                <input type="text" class="form-control" id="nome" name="nome" value="<?= htmlspecialchars($fornecedor->getNome() ?? '') ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="descricao">Descrição</label>
-                <textarea class="form-control" id="descricao" name="descricao" rows="3" required><?= htmlspecialchars($fornecedor['descricao'] ?? '') ?></textarea>
+                <textarea class="form-control" id="descricao" name="descricao" rows="3" required><?= htmlspecialchars($fornecedor->getDescricao()  ?? '') ?></textarea>
             </div>
 
             <div class="form-group">
                 <label for="telefone">Telefone</label>
-                <input type="text" class="form-control" id="telefone" name="telefone" value="<?= htmlspecialchars($fornecedor['telefone'] ?? '') ?>" required>
+                <input type="text" class="form-control" id="telefone" name="telefone" value="<?= htmlspecialchars($fornecedor->getTelefone()  ?? '') ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="email">E-mail</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($fornecedor['email'] ?? '') ?>" required>
+                <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($fornecedor->getEmail()  ?? '') ?>" required>
             </div>
-
-            <hr>
-
+            <div class="text-center">
+                <button type="submit" class="btn btn-custom btn-lg btn-block">Salvar Alterações</button>
+            </div>
+<!-- 
             <h5 class="text-center mb-3">Endereço do Fornecedor</h5>
 
             <div class="form-group">
@@ -108,11 +111,11 @@ $fornecedor = $fornecedor[0];
             <div class="form-group">
                 <label for="cep">CEP</label>
                 <input type="text" class="form-control" id="cep" name="cep" value="<?= htmlspecialchars($fornecedor['cep'] ?? '') ?>" required>
-            </div>
+            </div> -->
 
-            <div class="text-center">
-                <button type="submit" class="btn btn-custom btn-lg btn-block">Salvar Alterações</button>
-            </div>
+            <hr>
+
+        
         </form>
     </div>
 </div>

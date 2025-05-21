@@ -1,12 +1,12 @@
 <?php
 include "../includes/verifica.php";
-require_once '../controllers/FornecedorController.php';
-$controller = new FornecedorController();
+include_once "../fachada.php";
+$dao = $factory->getFornecedorDAO();
 
 if (isset($_GET['busca']) && !empty($_GET['busca'])) {
-    $fornecedores = $controller->consultar($_GET['busca']);
+    $fornecedores = $dao->buscaPorNomeCom($_GET['busca']);
 } else {
-    $fornecedores = $controller->listarTodos();
+    $fornecedores = $dao->buscaTodos();
 }
 ?>
 
@@ -26,7 +26,7 @@ if (isset($_GET['busca']) && !empty($_GET['busca'])) {
                     value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
                 <button type="submit" class="btn btn-custom mr-2">Buscar</button>
             </form>
-            <a href="fornecedor.php" class="btn-aliexpress">
+            <a href="editar_fornecedor.php" class="btn-aliexpress">
                 <i class="fas fa-plus"></i> Novo Fornecedor
             </a>
 
