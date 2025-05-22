@@ -5,18 +5,20 @@ include_once "../fachada.php";
 $id = @$_GET["id"];
 $idEndereco = @$_GET["idEndereco"];
 
-$dao = $factory->getFornecedorDAO();
+$dao = $factory->getFornecedorDao();
+$daoEndereco = $factory->getEnderecoDao();
+
 $fornecedor = $dao->buscaPorId($id);
+$endereco= $daoEndereco->buscaPorId($idEndereco);
 
 // $endereco = $dao->buscaPorId($idEndereco);
 
 if($fornecedor==null) {
     $fornecedor = new Fornecedor( null, null, null, null, null, null);
 }
-
-// if($endereco==null) {
-//     $endereco = new Fornecedor( null, null, null, null, null, null);
-// }
+if($endereco==null) {
+    $endereco = new Endereco(null,null, null, null, null, null, null, null);
+}
 ?>
 
 <?php include('../includes/header.php'); ?>
@@ -72,49 +74,49 @@ if($fornecedor==null) {
                 <label for="email">E-mail</label>
                 <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($fornecedor->getEmail()  ?? '') ?>" required>
             </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-custom btn-lg btn-block">Salvar Alterações</button>
-            </div>
-<!-- 
+
             <h5 class="text-center mb-3">Endereço do Fornecedor</h5>
 
             <div class="form-group">
                 <label for="rua">Rua</label>
-                <input type="text" class="form-control" id="rua" name="rua" value="<?= htmlspecialchars($fornecedor['rua'] ?? '') ?>" required>
+                <input type="text" class="form-control" id="rua" name="rua" value="<?= htmlspecialchars($endereco->getRua() ?? '') ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="numero">Número</label>
-                <input type="text" class="form-control" id="numero" name="numero" value="<?= htmlspecialchars($fornecedor['numero'] ?? '') ?>" required>
+                <input type="text" class="form-control" id="numero" name="numero" value="<?= htmlspecialchars($endereco->getNumero() ?? '') ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="complemento">Complemento</label>
-                <input type="text" class="form-control" id="complemento" name="complemento" value="<?= htmlspecialchars($fornecedor['complemento'] ?? '') ?>" required>
+                <input type="text" class="form-control" id="complemento" name="complemento" value="<?= htmlspecialchars($endereco->getComplemento() ?? '') ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="bairro">Bairro</label>
-                <input type="text" class="form-control" id="bairro" name="bairro" value="<?= htmlspecialchars($fornecedor['bairro'] ?? '') ?>" required>
+                <input type="text" class="form-control" id="bairro" name="bairro" value="<?= htmlspecialchars($endereco->getBairro() ?? '') ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="cidade">Cidade</label>
-                <input type="text" class="form-control" id="cidade" name="cidade" value="<?= htmlspecialchars($fornecedor['cidade'] ?? '') ?>" required>
+                <input type="text" class="form-control" id="cidade" name="cidade" value="<?= htmlspecialchars($endereco->getCidade() ?? '') ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="estado">Estado</label>
-                <input type="text" class="form-control" id="estado" name="estado" value="<?= htmlspecialchars($fornecedor['estado'] ?? '') ?>" required>
+                <input type="text" class="form-control" id="estado" name="estado" value="<?= htmlspecialchars($endereco->getEstado() ?? '') ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="cep">CEP</label>
-                <input type="text" class="form-control" id="cep" name="cep" value="<?= htmlspecialchars($fornecedor['cep'] ?? '') ?>" required>
-            </div> -->
+                <input type="text" class="form-control" id="cep" name="cep" value="<?= htmlspecialchars($endereco->getCep() ?? '') ?>" required>
+            </div>
 
             <hr>
 
+            <div class="text-center">
+                <button type="submit" class="btn btn-custom btn-lg btn-block">Salvar Alterações</button>
+            </div>
         
         </form>
     </div>

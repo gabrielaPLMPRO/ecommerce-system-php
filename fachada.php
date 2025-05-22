@@ -1,6 +1,7 @@
 <?php
 
 include_once('models/Fornecedor.php');
+include_once('models/Endereco.php');
 include_once('dao/DaoFactory.php');
 include_once('dao/PostgresDaoFactory.php');
 

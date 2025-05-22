@@ -20,7 +20,7 @@ class PostgresFornecedorDao extends PostgresDao {
         $descricao = $fornecedor->getDescricao();
         $telefone = $fornecedor->getTelefone();
         $email = $fornecedor->getEmail();
-        $endereco_id = 4;
+        $endereco_id = $fornecedor->getEnderecoId();
 
         $stmt->bindParam(":nome", $nome);
         $stmt->bindParam(":descricao", $descricao );

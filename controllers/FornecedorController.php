@@ -2,6 +2,7 @@
 include_once "../fachada.php";
 
 $dao = $factory->getFornecedorDao();
+$daoEndereco = $factory->getEnderecoDao();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['acao'])) {
@@ -13,26 +14,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $descricao = @$_POST["descricao"];
                 $telefone = @$_POST["telefone"];
                 $email = @$_POST["email"];
-                $endereco_id = @$_POST["endereco_id"];
+                $endereco_id = @$_POST["endereco_id"]; 
+
+                $rua = @$_POST["rua"]; 
+                $numero = @$_POST["numero"]; 
+                $complemento = @$_POST["complemento"]; 
+                $bairro = @$_POST["bairro"]; 
+                $cidade = @$_POST["cidade"]; 
+                $estado = @$_POST["estado"]; 
+                $cep = @$_POST["cep"]; 
 
                 $fornecedor = $dao->buscaPorId($id);
 
                 if($fornecedor===null) {
-                    $fornecedor = new Fornecedor( $id, $nome, $descricao, $telefone, $email, $endereco_id);
-                    if ($dao->insere($fornecedor)) {
-                        header('Location: ../views/fornecedor_listar.php?msg=inserido');
+                    $endereco= new Endereco($id, $rua, $numero, $complemento, $bairro, $cidade, $estado, $cep);
+
+                    $idEnderecoInserido=$daoEndereco->insere($endereco);
+                    if ($idEnderecoInserido!==false) {
+                        
+                        $fornecedor = new Fornecedor( $id, $nome, $descricao, $telefone, $email, $idEnderecoInserido);
+                        if ($dao->insere($fornecedor)) {
+                            header('Location: ../views/fornecedor_listar_paginado.php?msg=inserido');
+                        } else {
+                            header('Location: ../views/fornecedor_listar_paginado.php?msg=erro');
+                        }
+
                     } else {
-                        header('Location: ../views/fornecedor_listar.php?msg=erro');
+                        header('Location: ../views/fornecedor_listar_paginado.php?msg=erro');
                     }
                 } else {
-                    $fornecedor = $dao->buscaPorId($id);
+                    $endereco= $daoEndereco->buscaPorId($fornecedor->getEnderecoId());
 
-                    $fornecedor->setNome($nome);
-                    $fornecedor->setDescricao($descricao);
-                    $fornecedor->setTelefone($telefone);
-                    $fornecedor->setEmail($email);
-                    if ($dao->altera($fornecedor)) {
-                        header('Location: ../views/fornecedor_listar_paginado.php?msg=alterado');
+                    $endereco->setRua($rua);
+                    $endereco->setNumero($numero);
+                    $endereco->setComplemento($complemento);
+                    $endereco->setBairro($bairro);
+                    $endereco->setCidade($cidade);
+                    $endereco->setEstado($estado);
+                    $endereco->setCep($cep);
+
+                    if ($daoEndereco->altera($endereco)) {
+                        $fornecedor->setNome($nome);
+                        $fornecedor->setDescricao($descricao);
+                        $fornecedor->setTelefone($telefone);
+                        $fornecedor->setEmail($email);
+                        if ($dao->altera($fornecedor)) {
+                            header('Location: ../views/fornecedor_listar_paginado.php?msg=alterado');
+                        } else {
+                            header('Location: ../views/fornecedor_listar_paginado.php?msg=erro');
+                        }
                     } else {
                         header('Location: ../views/fornecedor_listar_paginado.php?msg=erro');
                     }
@@ -70,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <th>Nome</th>
                     <th>Email</th>
                     <th>Telefone</th>
+                    <th>Cidade</th>
                     <th>Ações</th>
                 </tr>
                 ';
@@ -77,14 +108,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 {
                 foreach($fornecedores as $fornecedor)
                 {
+                    $endereco=$daoEndereco->buscaPorId($fornecedor->getEnderecoId());
+
                     $output .= '
                     <tr>
                     <td>'.$fornecedor->getId().'</td>
                     <td>'.$fornecedor->getNome().'</td>
                     <td>'.$fornecedor->getEmail().'</td>
                     <td>'.$fornecedor->getTelefone().'</td>
+                    <td>'.$endereco->getCidade().'</td>
                     <td>
-                                    <a href="editar_fornecedor.php?id='.$fornecedor->getId().'"
+                                    <a href="editar_fornecedor.php?id='.$fornecedor->getId().'&idEndereco='.$endereco->getId().'"
                                         class="btn btn-warning btn-sm btn-custom-actions" data-toggle="tooltip" title="Editar">
                                         <i class="fas fa-edit icon"></i>
                                     </a>
@@ -106,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 {
                 $output .= '
                 <tr>
-                    <td colspan="4" align="center">Nenhum nome encontrado</td>
+                    <td colspan="6" align="center">Nenhum nome encontrado</td>
                 </tr>
                 ';
                 }
