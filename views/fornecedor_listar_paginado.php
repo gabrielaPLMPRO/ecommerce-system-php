@@ -20,6 +20,9 @@
           <div class="form-group">
             <input type="text" name="search_box" id="search_box" class="form-control" placeholder="Digite aqui letras do nome para pesquisar" />
           </div>
+           <a href="editar_fornecedor.php" class="btn-aliexpress">
+                <i class="fas fa-plus"></i> Novo Fornecedor
+            </a>
           <div class="table-responsive" id="dynamic_content">
             
           </div>
