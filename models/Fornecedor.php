@@ -34,9 +34,4 @@ class Fornecedor {
 
     public function getEnderecoId() { return $this->endereco_id; }
     public function setEnderecoId($endereco_id) {$this->endereco_id = $endereco_id;}
-
-    public function getDadosParaJSON() {
-        $data = ['id' => $this->id, 'nome' => $this->nome, 'descricao' => $this->descricao, 'telefone' => $this->telefone, 'email' => $this->email, 'endereco_id' => $this->endereco_id];
-        return $data;
-    }
 }

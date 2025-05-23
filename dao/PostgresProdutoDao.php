@@ -2,31 +2,27 @@
 
 include_once('PostgresDao.php');
 
-class PostgresFornecedorDao extends PostgresDao {
+class PostgresProdutoDao extends PostgresDao {
 
-    private $table_name = 'fornecedores';
+    private $table_name = 'produto';
     
-    public function insere($fornecedor) {
+    public function insere($produto) {
 
         $query = "INSERT INTO " . $this->table_name . 
-        " (nome, descricao, telefone, email, endereco_id) VALUES" .
-        " (:nome, :descricao, :telefone, :email, :endereco_id)";
+        " (nome, descricao, fornecedor_id) VALUES" .
+        " (:nome, :descricao, :fornecedor_id)";
 
         $stmt = $this->conn->prepare($query);
 
         // bind values 
 
-        $nome = $fornecedor->getNome();
-        $descricao = $fornecedor->getDescricao();
-        $telefone = $fornecedor->getTelefone();
-        $email = $fornecedor->getEmail();
-        $endereco_id = $fornecedor->getEnderecoId();
+        $nome = $produto->getNome();
+        $descricao = $produto->getDescricao();
+        $fornecedor_id = $produto->getFornecedorId();
 
         $stmt->bindParam(":nome", $nome);
         $stmt->bindParam(":descricao", $descricao );
-        $stmt->bindParam(":telefone", $telefone);
-        $stmt->bindParam(":email", $email);
-        $stmt->bindParam(":endereco_id", $endereco_id);
+        $stmt->bindParam(":fornecedor_id", $fornecedor_id);
 
         if($stmt->execute()){
             return true;
@@ -52,24 +48,22 @@ class PostgresFornecedorDao extends PostgresDao {
 
         return false;
     }
-    public function altera($fornecedor) {
+    public function altera($produto) {
 
         $query = "UPDATE " . $this->table_name . 
-        " SET nome = :nome, descricao = :descricao, telefone = :telefone, email = :email" .
+        " SET nome = :nome, descricao = :descricao, fornecedor_id = :fornecedor_id" .
         " WHERE id = :id";
 
         $stmt = $this->conn->prepare($query);
 
-        $nome = $fornecedor->getNome();
-        $descricao = $fornecedor->getDescricao();
-        $telefone = $fornecedor->getTelefone();
-        $email = $fornecedor->getEmail();
-        $id = $fornecedor->getId();
+        $nome = $produto->getNome();
+        $descricao = $produto->getDescricao();
+        $fornecedor_id = $produto->getFornecedorId();
+        $id = $produto->getId();
 
         $stmt->bindParam(":nome", $nome);
-        $stmt->bindParam(":descricao", $descricao );
-        $stmt->bindParam(":telefone", $telefone);
-        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":descricao", $descricao);
+        $stmt->bindParam(":telefone", $fornecedor_id);
         $stmt->bindParam(":id", $id);
 
         // execute the query
@@ -82,10 +76,10 @@ class PostgresFornecedorDao extends PostgresDao {
 
     public function buscaPorId($id) {
         
-        $fornecedor = null;
+        $produto = null;
 
         $query = "SELECT
-                    id, nome, descricao, telefone, email, endereco_id
+                    id, nome, descricao, fornecedor_id
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -99,17 +93,17 @@ class PostgresFornecedorDao extends PostgresDao {
      
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
-            $fornecedor = new Fornecedor($row['id'],$row['nome'], $row['descricao'], $row['telefone'], $row['email'], $row['endereco_id']);
+            $produto = new Produto($row['id'],$row['nome'], $row['descricao'], $row['fornecedor_id']);
         } 
      
-        return $fornecedor;
+        return $produto;
     }
 
     public function buscaComNomePaginado($nome,$inicio,$quantos) {
-        $fornecedores = array();
+        $produtos = array();
 
         $query = "SELECT
-                    id, nome, descricao, telefone, email, endereco_id
+                    id, nome, descricao, fornecedor_id
                 FROM
                     " . $this->table_name . 
                     " WHERE UPPER(nome) LIKE ?" .
@@ -127,10 +121,10 @@ class PostgresFornecedorDao extends PostgresDao {
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
-            $fornecedores[] = new Fornecedor($id,$nome,$descricao,$telefone, $email, $endereco_id);
+            $produtos[] = new Produto($id,$nome,$descricao,$fornecedor_id);
         }
         
-        return $fornecedores;
+        return $produtos;
     }
 
     public function contaComNome($nome) {

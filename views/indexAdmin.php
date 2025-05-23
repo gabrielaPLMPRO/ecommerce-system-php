@@ -37,7 +37,7 @@
     </div>
 
     <div class="col-md-6 col-lg-4 mb-4">
-      <a href="fornecedor_listar.php" class="text-decoration-none text-dark">
+      <a href="fornecedor_listar_paginado.php" class="text-decoration-none text-dark">
         <div class="dashboard-card">
           <div class="dashboard-title">Listar Fornecedores</div>
         </div>

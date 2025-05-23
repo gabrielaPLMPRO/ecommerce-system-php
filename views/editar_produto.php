@@ -1,25 +1,18 @@
 <?php
-include "../includes/verifica.php";
-require_once '../controllers/ProdutoController.php';
-require_once '../controllers/FornecedorController.php';
-$controller = new ProdutoController();
-$controllerFornecedores = new FornecedorController();
 
-if (!isset($_GET['id'])) {
-    header('Location: produto_listar.php?msg=erro');
-    exit;
+include_once "../fachada.php";
+
+$id = @$_GET["id"];
+
+$dao = $factory->getProdutoDao();
+
+$produto = $dao->buscaPorId($id);
+
+// $endereco = $dao->buscaPorId($idEndereco);
+
+if($produto==null) {
+    $produto = new Produto( null, null, null, null);
 }
-
-$produto = $controller->consultar($_GET['id']);
-if (!$produto) {
-    header('Location: produto_listar.php?msg=erro');
-    exit;
-}
-
-$fornecedores = new FornecedorController();
-$listaFornecedores = $fornecedores->listarTodos();
-
-$produto = $produto[0];
 ?>
 
 <?php include('../includes/header.php'); ?>
@@ -52,38 +45,51 @@ $produto = $produto[0];
     <div class="card-form">
         <h2>Editar Produto</h2>
         <form action="../controllers/ProdutoController.php" method="POST">
-            <input type="hidden" name="acao" value="alterar">
-            <input type="hidden" name="id" value="<?= $produto['id'] ?>">
+            <input type="hidden" name="acao" value="salvar">
+            <input type="hidden" name="id" value="<?=$produto->getId()?>">
 
             <div class="form-group">
-                <label for="nome">Nome</label>
-                <input type="text" class="form-control" id="nome" name="nome" value="<?= htmlspecialchars($produto['nome']) ?>" required>
+                <label for="nome">Nome do Produto</label>
+                <input type="text" class="form-control" id="nome" name="nome" value="<?= htmlspecialchars($produto->getNome() ?? '') ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="descricao">Descrição</label>
-                <textarea class="form-control" id="descricao" name="descricao" rows="3"><?= htmlspecialchars($produto['descricao']) ?></textarea>
+                <textarea class="form-control" id="descricao" name="descricao" rows="3" required><?= htmlspecialchars($produto->getDescricao()  ?? '') ?></textarea>
             </div>
 
-            <div class="form-group">
-                <label for="fornecedor">Selecione o Fornecedor</label>
+             <div class="form-group">
+                <label for="fornecedor">Fornecedor</label>
                 <select name="fornecedor_id" id="fornecedor_id" class="form-control">
                     <?php
-                   
-
                     foreach ($listaFornecedores as $fornecedor) {
-                        $selected=($fornecedor['fornecedor_id']==$produto['fornecedor_id'])?'selected':'';
-                        echo '<option value="' . htmlspecialchars($fornecedor['fornecedor_id']) .'" '. $selected.'>' . htmlspecialchars($fornecedor['nome']) . '</option>';
+                        $selected=($fornecedor->getId()==$produto->getFornecedorId())?'selected':'';
+                        echo '<option value="' . htmlspecialchars($fornecedor->getId()) .'" '. $selected.'>' . htmlspecialchars($fornecedor->getNome()) . '</option>';
                     }
                     ?>
                 </select>
             </div>
+<?php 
+if(!empty($produto->getId())){
+    echo '<h5 class="text-center mb-3">Estoque do Produto</h5>
 
+            <div class="form-group">
+                <label for="preco">Preço</label>
+                <input type="number" step="0.01" class="form-control" id="preco" name="preco" placeholder="Digite o preço" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantidade">Quantidade em estoque</label>
+                <input type="number" class="form-control" id="quantidade" name="quantidade" placeholder="Digite a quantidade" required>
+            </div>'
+}
+?>
             <hr>
 
             <div class="text-center">
                 <button type="submit" class="btn btn-custom btn-lg btn-block">Salvar Alterações</button>
             </div>
+        
         </form>
     </div>
 </div>

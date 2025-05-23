@@ -1,102 +1,28 @@
 <?php
-require_once __DIR__ . '/../includes/db.connection.php';
-
 class Produto {
     public $id;
     public $nome;
     public $descricao;
-    public $foto;
     public $fornecedor_id;
 
-    public function salvar($conn) {
-        $sql = "INSERT INTO produtos (nome, descricao, fornecedor_id) VALUES (?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $sucesso = $stmt->execute([
-            $this->nome,
-            $this->descricao,
-            $this->fornecedor_id
-        ]);
-        
-        if ($sucesso) {
-            $this->id = $conn->lastInsertId();
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public static function listar($conn) {
-        $sql = "SELECT p.id id, p.nome nome, p.descricao descricao, p.fornecedor_id, f.nome fornecedor FROM produtos p, fornecedores f
-                WHERE f.id=p.fornecedor_id
-                ORDER BY nome ASC";
-        $stmt = $conn->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    public static function buscar($conn, $termo) {
-        $sql = "SELECT p.id id, p.nome nome, p.descricao descricao, p.fornecedor_id, f.nome fornecedor FROM produtos p, fornecedores f
-                WHERE p.id||p.nome||p.descricao ILIKE :termo
-                AND f.id=p.fornecedor_id";
-        
-        $stmt = $conn->prepare($sql);
-    
-        $likeTerm = "%" . $termo . "%";
-        $stmt->bindValue(':termo', $likeTerm);
- 
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public function __construct( $id, $nome, $descricao, $fornecedor_id)
+    {
+        $this->id=$id;
+        $this->nome=$nome;
+        $this->descricao=$descricao;
+        $this->fornecedor_id=$fornecedor_id;
     }
 
-    public static function buscarPorId($conn, $id) {
-        $sql = "SELECT p.id, p.nome, p.descricao, p.foto, p.fornecedor_id, f.nome AS fornecedor_nome
-                FROM produtos p
-                LEFT JOIN fornecedores f ON p.fornecedor_id = f.id
-                WHERE p.id = :id";
-        
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-    
+    public function getId() { return $this->id; }
+    public function setId($id) {$this->id = $id;}
 
-    public function atualizar($conn) {
-        try {
-            $conn->beginTransaction();
-    
-            $sql = "UPDATE produtos 
-                              SET nome = ?, descricao = ?, fornecedor_id = ?
-                              WHERE id = ?";
-                              
-            $stmt = $conn->prepare($sql);
-            $stmt->execute([
-                $this->nome,
-                $this->descricao,
-                $this->fornecedor_id,
-                $this->id
-            ]);
-    
-            $conn->commit();
-            return true;
-    
-        } catch (Exception $e) {
-            $conn->rollBack();
-            return false;
-        }
-    }
-    public function excluir($conn) {
-        $conn->beginTransaction();
+    public function getNome() { return $this->nome; }
+    public function setNome($nome) {$this->nome = $nome;}
 
-        try {
-            $stmt = $conn->prepare("DELETE FROM produtos WHERE id = ?");
-            $stmt->execute([$this->id]);
+    public function getDescricao() { return $this->descricao; }
+    public function setDescricao($descricao) {$this->descricao = $descricao;}
 
-            $conn->commit();
-            return true;
-
-        } catch (Exception $e) {
-            $conn->rollBack();
-            return false;
-        }
-    }
+    public function getFornecedorId() { return $this->fornecedor_id; }
+    public function setFornecedorId($fornecedor_id) {$this->fornecedor_id = $fornecedor_id;}
 }
 ?>

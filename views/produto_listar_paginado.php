@@ -23,8 +23,8 @@ include "../includes/verifica.php";
           <div class="form-group">
             <input type="text" name="search_box" id="search_box" class="form-control" placeholder="Digite aqui letras do nome para pesquisar" />
           </div>
-           <a href="editar_fornecedor.php" class="btn-aliexpress">
-                <i class="fas fa-plus"></i> Novo Fornecedor
+           <a href="editar_produto.php" class="btn-aliexpress">
+                <i class="fas fa-plus"></i> Novo Produto
             </a>
           <div class="table-responsive" id="dynamic_content">
             
@@ -42,7 +42,7 @@ include "../includes/verifica.php";
     function load_data(page, query = '')
     {
       $.ajax({
-        url:"../controllers/FornecedorController.php",
+        url:"../controllers/ProdutoController.php",
         method:"POST",
         data:{page:page, query:query, acao:'carregar'},
         success:function(data)
