@@ -13,7 +13,7 @@
   <div class="row g-4">
 
   <div class="col-md-6 col-lg-4 mb-4">
-      <a href="produto.php" class="text-decoration-none text-dark">
+      <a href="editar_produto.php" class="text-decoration-none text-dark">
         <div class="dashboard-card">
           <div class="dashboard-title">Cadastrar Produto</div>
         </div>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="col-md-6 col-lg-4 mb-4">
-      <a href="fornecedor.php" class="text-decoration-none text-dark">
+      <a href="editar_fornecedor.php" class="text-decoration-none text-dark">
         <div class="dashboard-card">
           <div class="dashboard-title">Cadastrar Fornecedor</div>
         </div>
@@ -45,7 +45,7 @@
     </div>
 
     <div class="col-md-6 col-lg-4 mb-4">
-      <a href="produto_listar.php" class="text-decoration-none text-dark">
+      <a href="produto_listar_paginado.php" class="text-decoration-none text-dark">
         <div class="dashboard-card">
           <div class="dashboard-title">Listar Produtos</div>
         </div>

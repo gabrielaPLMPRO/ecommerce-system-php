@@ -4,6 +4,7 @@ include_once('DaoFactory.php');
 include_once('PostgresFornecedorDao.php');
 include_once('PostgresEnderecoDao.php');
 include_once('PostgresProdutoDao.php');
+include_once('PostgresEstoqueDao.php');
 
 class PostgresDaofactory extends DaoFactory {
 
@@ -36,6 +37,9 @@ class PostgresDaofactory extends DaoFactory {
     }
     public function getProdutoDao() {
         return new PostgresProdutoDao($this->getConnection());
+    }
+    public function getEstoqueDao() {
+        return new PostgresEstoqueDao($this->getConnection());
     }
 }
 ?>

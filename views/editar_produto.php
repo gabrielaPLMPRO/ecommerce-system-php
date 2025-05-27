@@ -1,6 +1,7 @@
 <?php
 
 include_once "../fachada.php";
+include "../includes/verifica.php";
 
 $id = @$_GET["id"];
 
