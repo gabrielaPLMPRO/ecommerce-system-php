@@ -17,11 +17,11 @@ class PostgresEstoqueDao extends PostgresDao {
         // bind values 
 
         $preco = $estoque->getPreco();
-        $estoque = $estoque->getEstoque();
+        $qtdEstoque = $estoque->getEstoque();
         $produto_id = $estoque->getProdutoId();
 
         $stmt->bindParam(":preco", $preco);
-        $stmt->bindParam(":estoque", $estoque );
+        $stmt->bindParam(":estoque", $qtdEstoque );
         $stmt->bindParam(":produto_id", $produto_id);
 
         if($stmt->execute()){
@@ -32,14 +32,14 @@ class PostgresEstoqueDao extends PostgresDao {
 
     }
 
-    public function removePorId($id) {
+    public function removePorProdutoId($produto_id) {
         $query = "DELETE FROM " . $this->table_name . 
-        " WHERE id = :id";
+        " WHERE produto_id = :produto_id";
 
         $stmt = $this->conn->prepare($query);
 
         // bind parameters
-        $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
+        $stmt->bindValue(':produto_id', (int)$id, PDO::PARAM_INT);
 
         // execute the query
         if($stmt->execute()){
@@ -57,11 +57,11 @@ class PostgresEstoqueDao extends PostgresDao {
         $stmt = $this->conn->prepare($query);
 
         $preco = $estoque->getPreco();
-        $estoque = $estoque->getEstoque();
+        $qtdEstoque = $estoque->getEstoque();
         $id = $estoque->getId();
 
         $stmt->bindParam(":preco", $preco);
-        $stmt->bindParam(":estoque", $estoque);
+        $stmt->bindParam(":estoque", $qtdEstoque);
         $stmt->bindParam(":id", $id);
 
         // execute the query
@@ -101,10 +101,11 @@ class PostgresEstoqueDao extends PostgresDao {
         $estoques = array();
 
         $query = "SELECT
-                    id, preco, estoque, produto_id
+                    e.id, e.preco, e.estoque, e.produto_id
                 FROM
-                    " . $this->table_name . 
-                    " WHERE UPPER(nome) LIKE ?" .
+                    " . $this->table_name . " e, produtos p".
+                    " WHERE UPPER(p.nome) LIKE ?" .
+                    " and e.produto_id=p.id".
                     " ORDER BY id ASC" .
                     " LIMIT ? OFFSET ?";
      
@@ -115,7 +116,6 @@ class PostgresEstoqueDao extends PostgresDao {
         $stmt->execute();
 
         $filter_query = $query . "LIMIT " .$quantos. " OFFSET " . $inicio . '';
-        error_log("---> DAO Query : " . $filter_query);
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
@@ -130,8 +130,8 @@ class PostgresEstoqueDao extends PostgresDao {
         $quantos = 0;
 
         $query = "SELECT COUNT(*) AS contagem FROM " . 
-                    $this->table_name .
-                    " WHERE UPPER(nome) LIKE ? ";
+                    $this->table_name ." e, produtos p where p.id=e.produto_id".
+                    " and UPPER(p.nome) LIKE ? ";
      
         $stmt = $this->conn->prepare( $query );
         $stmt->bindValue(1, '%' . strtoupper($nome) . '%');

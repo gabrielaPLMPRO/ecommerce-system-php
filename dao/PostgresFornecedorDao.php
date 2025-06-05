@@ -104,6 +104,28 @@ class PostgresFornecedorDao extends PostgresDao {
      
         return $fornecedor;
     }
+    public function buscarTudo() {
+        $fornecedores = array();
+
+        $query = "SELECT
+                    id, nome, descricao, telefone, email, endereco_id
+                FROM
+                    " . $this->table_name . 
+                    " ORDER BY id ASC" ;
+
+        $stmt = $this->conn->prepare( $query );
+
+        error_log("---> DAO Query : " . $query);
+
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $fornecedores[] = new Fornecedor($id,$nome,$descricao,$telefone, $email, $endereco_id);
+        }
+        
+        return $fornecedores;
+    }
 
     public function buscaComNomePaginado($nome,$inicio,$quantos) {
         $fornecedores = array();

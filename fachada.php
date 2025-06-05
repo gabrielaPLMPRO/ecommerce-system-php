@@ -1,9 +1,9 @@
 <?php
 
 include_once('models/Fornecedor.php');
+include_once('models/Estoque.php');
 include_once('models/Endereco.php');
 include_once('models/Produto.php');
-include_once('dao/DaoFactory.php');
 include_once('dao/PostgresDaoFactory.php');
 
 ini_set('display_errors', 1);

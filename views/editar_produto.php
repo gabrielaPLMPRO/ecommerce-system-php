@@ -6,14 +6,17 @@ include "../includes/verifica.php";
 $id = @$_GET["id"];
 
 $dao = $factory->getProdutoDao();
+$daoFornecedor = $factory->getFornecedorDao();
 
 $produto = $dao->buscaPorId($id);
+$listaFornecedores= $daoFornecedor->buscarTudo();
 
 // $endereco = $dao->buscaPorId($idEndereco);
 
 if($produto==null) {
     $produto = new Produto( null, null, null, null);
 }
+
 ?>
 
 <?php include('../includes/header.php'); ?>
@@ -71,7 +74,8 @@ if($produto==null) {
                 </select>
             </div>
 <?php 
-if(!empty($produto->getId())){
+if(empty($produto->getId()))
+{
     echo '<h5 class="text-center mb-3">Estoque do Produto</h5>
 
             <div class="form-group">
@@ -82,7 +86,7 @@ if(!empty($produto->getId())){
             <div class="form-group">
                 <label for="quantidade">Quantidade em estoque</label>
                 <input type="number" class="form-control" id="quantidade" name="quantidade" placeholder="Digite a quantidade" required>
-            </div>'
+            </div>';
 }
 ?>
             <hr>

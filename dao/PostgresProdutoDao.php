@@ -4,7 +4,7 @@ include_once('PostgresDao.php');
 
 class PostgresProdutoDao extends PostgresDao {
 
-    private $table_name = 'produto';
+    private $table_name = 'produtos';
     
     public function insere($produto) {
 
@@ -23,13 +23,12 @@ class PostgresProdutoDao extends PostgresDao {
         $stmt->bindParam(":nome", $nome);
         $stmt->bindParam(":descricao", $descricao );
         $stmt->bindParam(":fornecedor_id", $fornecedor_id);
-
+      
         if($stmt->execute()){
-            return true;
-        }else{
+            return $this->conn->lastInsertId();  // retorna o ID inserido
+        } else {
             return false;
         }
-
     }
 
     public function removePorId($id) {
@@ -63,7 +62,7 @@ class PostgresProdutoDao extends PostgresDao {
 
         $stmt->bindParam(":nome", $nome);
         $stmt->bindParam(":descricao", $descricao);
-        $stmt->bindParam(":telefone", $fornecedor_id);
+        $stmt->bindParam(":fornecedor_id", $fornecedor_id);
         $stmt->bindParam(":id", $id);
 
         // execute the query

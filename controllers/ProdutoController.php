@@ -3,6 +3,7 @@ include_once "../fachada.php";
 
 $dao = $factory->getProdutoDao();
 $daoFornecedor = $factory->getFornecedorDao();
+$daoEstoque = $factory->getEstoqueDao();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['acao'])) {
@@ -12,59 +13,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $id = @$_POST["id"];
                 $nome = @$_POST["nome"];
                 $descricao = @$_POST["descricao"];
-                $telefone = @$_POST["telefone"];
-                $email = @$_POST["email"];
-                $endereco_id = @$_POST["endereco_id"]; 
+                $fornecedor_id = @$_POST["fornecedor_id"];
 
-                $rua = @$_POST["rua"]; 
-                $numero = @$_POST["numero"]; 
-                $complemento = @$_POST["complemento"]; 
-                $bairro = @$_POST["bairro"]; 
-                $cidade = @$_POST["cidade"]; 
-                $estado = @$_POST["estado"]; 
-                $cep = @$_POST["cep"]; 
+                $preco = @$_POST["preco"]; 
+                $qtdEstoque = @$_POST["quantidade"]; 
 
-                $fornecedor = $dao->buscaPorId($id);
+                $produto = $dao->buscaPorId($id);
 
-                if($fornecedor===null) {
-                    $endereco= new Endereco($id, $rua, $numero, $complemento, $bairro, $cidade, $estado, $cep);
+                if($produto===null) {
+                    $produto= new Produto($id, $nome, $descricao, $fornecedor_id);
 
-                    $idEnderecoInserido=$daoEndereco->insere($endereco);
-                    if ($idEnderecoInserido!==false) {
+                    $idProdutoInserido=$dao->insere($produto);
+                    if ($idProdutoInserido!==false) {
                         
-                        $fornecedor = new Fornecedor( $id, $nome, $descricao, $telefone, $email, $idEnderecoInserido);
-                        if ($dao->insere($fornecedor)) {
-                            header('Location: ../views/fornecedor_listar_paginado.php?msg=inserido');
+                        $estoque = new Estoque( 0, $preco, $qtdEstoque,$idProdutoInserido);
+                        if ($daoEstoque->insere($estoque)) {
+                            header('Location: ../views/produto_listar_paginado.php?msg=inserido');
                         } else {
-                            header('Location: ../views/fornecedor_listar_paginado.php?msg=erro');
+                            header('Location: ../views/produto_listar_paginado.php?msg=erro');
                         }
 
                     } else {
-                        header('Location: ../views/fornecedor_listar_paginado.php?msg=erro');
+                        header('Location: ../views/produto_listar_paginado.php?msg=erro');
                     }
                 } else {
-                    $endereco= $daoEndereco->buscaPorId($fornecedor->getEnderecoId());
-
-                    $endereco->setRua($rua);
-                    $endereco->setNumero($numero);
-                    $endereco->setComplemento($complemento);
-                    $endereco->setBairro($bairro);
-                    $endereco->setCidade($cidade);
-                    $endereco->setEstado($estado);
-                    $endereco->setCep($cep);
-
-                    if ($daoEndereco->altera($endereco)) {
-                        $fornecedor->setNome($nome);
-                        $fornecedor->setDescricao($descricao);
-                        $fornecedor->setTelefone($telefone);
-                        $fornecedor->setEmail($email);
-                        if ($dao->altera($fornecedor)) {
-                            header('Location: ../views/fornecedor_listar_paginado.php?msg=alterado');
-                        } else {
-                            header('Location: ../views/fornecedor_listar_paginado.php?msg=erro');
-                        }
+                    $produto->setNome($nome);
+                    $produto->setDescricao($descricao);
+                    $produto->setFornecedorId($fornecedor_id);
+                    if ($dao->altera($produto)) {
+                        header('Location: ../views/produto_listar_paginado.php?msg=alterado');
                     } else {
-                        header('Location: ../views/fornecedor_listar_paginado.php?msg=erro');
+                        header('Location: ../views/produto_listar_paginado.php?msg=erro');
                     }
                 }
                 break;
@@ -72,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'excluir':
                 $idExcluir = @$_POST["idExcluir"];
                 $dao->removePorId($idExcluir);
-                header('Location: ../views/fornecedor_listar_paginado.php?msg=excluido');
+                header('Location: ../views/produto_listar_paginado.php?msg=excluido');
                 break;
             case 'carregar':
                 $nome = $_POST['query'];

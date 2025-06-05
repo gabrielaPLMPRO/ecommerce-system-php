@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $fornecedor = $dao->buscaPorId($id);
 
                 if($fornecedor===null) {
-                    $endereco= new Endereco($id, $rua, $numero, $complemento, $bairro, $cidade, $estado, $cep);
+                    $endereco= new Endereco($id, $rua, $numero, $complemento, $bairro, $cep, $cidade, $estado);
 
                     $idEnderecoInserido=$daoEndereco->insere($endereco);
                     if ($idEnderecoInserido!==false) {
@@ -71,8 +71,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             case 'excluir':
                 $idExcluir = @$_POST["idExcluir"];
-                $dao->removePorId($idExcluir);
-                header('Location: ../views/fornecedor_listar_paginado.php?msg=excluido');
+                $idExcluirEndereco = @$_POST["idExcluirEndereco"];
+                
+                if($dao->removePorId($idExcluir)){
+                    if($daoEndereco-> removePorId($idExcluirEndereco)){
+                        header('Location: ../views/fornecedor_listar_paginado.php?msg=excluido');
+                    }
+                    else{
+                        header('Location: ../views/fornecedor_listar_paginado.php?msg=erro');
+                    }
+                }
+                else{
+                    header('Location: ../views/fornecedor_listar_paginado.php?msg=erro');
+                }
+
                 break;
             case 'carregar':
                 $nome = $_POST['query'];
@@ -126,6 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         onsubmit="return confirm("Tem certeza que deseja excluir este fornecedor?");">
                                         <input type="hidden" name="acao" value="excluir">
                                         <input type="hidden" name="idExcluir" value='.$fornecedor->getId().'">
+                                        <input type="hidden" name="idExcluirEndereco" value='.$fornecedor->getEnderecoId().'">
                                         <button type="submit" class="btn btn-danger btn-sm btn-custom-actions"
                                             data-toggle="tooltip" title="Excluir">
                                             <i class="fas fa-trash-alt icon"></i>

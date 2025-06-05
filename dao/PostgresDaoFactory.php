@@ -1,12 +1,11 @@
 <?php
 
-include_once('DaoFactory.php');
 include_once('PostgresFornecedorDao.php');
 include_once('PostgresEnderecoDao.php');
 include_once('PostgresProdutoDao.php');
 include_once('PostgresEstoqueDao.php');
 
-class PostgresDaofactory extends DaoFactory {
+class PostgresDaofactory {
 
     // specify your own database credentials
     private $username = "postgres";
