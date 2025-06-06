@@ -4,6 +4,8 @@ include_once('PostgresFornecedorDao.php');
 include_once('PostgresEnderecoDao.php');
 include_once('PostgresProdutoDao.php');
 include_once('PostgresEstoqueDao.php');
+include_once('PostgresPedidoDao.php');
+include_once('PostgresItensPedidoDao.php');
 
 class PostgresDaofactory {
 
@@ -39,6 +41,12 @@ class PostgresDaofactory {
     }
     public function getEstoqueDao() {
         return new PostgresEstoqueDao($this->getConnection());
+    }
+    public function getPedidoDao() {
+        return new PostgresPedidoDao($this->getConnection());
+    }
+    public function getItensPedidoDao(){
+        return new PostgresItensPedidoDao($this->getConnection());
     }
 }
 ?>
