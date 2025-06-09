@@ -15,7 +15,7 @@
 <div class="container">
     <div class="card-form">
         <h2>Login</h2>
-        <form action="../controllers/LoginController.php" method="POST">
+        <form action="../controllers/UsuarioController.php" method="POST">
             <input type="hidden" name="acao" value="executarLogin">
 
             <div class="form-group">
