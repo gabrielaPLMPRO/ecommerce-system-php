@@ -95,14 +95,12 @@ class PostgresPedidoDao extends PostgresDao {
                     id, cliente_id, usuario_id, status, numero, data_pedido, data_entrega, total
                 FROM
                     " . $this->table_name . 
-                    " WHERE numero LIKE ?" .
                     " ORDER BY id ASC" .
                     " LIMIT ? OFFSET ?";
      
         $stmt = $this->conn->prepare( $query );
-        $stmt->bindValue(1, '%' . strtoupper($numero) . '%');
-        $stmt->bindValue(2, $quantos);
-        $stmt->bindValue(3, $inicio);
+        $stmt->bindValue(1, $quantos);
+        $stmt->bindValue(2, $inicio);
         $stmt->execute();
 
         $filter_query = $query . "LIMIT " .$quantos. " OFFSET " . $inicio . '';
@@ -121,11 +119,9 @@ class PostgresPedidoDao extends PostgresDao {
         $quantos = 0;
 
         $query = "SELECT COUNT(*) AS contagem FROM " . 
-                    $this->table_name .
-                    " WHERE UPPER(numero) LIKE ? ";
+                    $this->table_name ;
      
         $stmt = $this->conn->prepare( $query );
-        $stmt->bindValue(1, '%' . strtoupper($numero) . '%');
         
         $stmt->execute();
 

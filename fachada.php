@@ -5,6 +5,9 @@ include_once('models/Estoque.php');
 include_once('models/Endereco.php');
 include_once('models/Produto.php');
 include_once('models/Usuario.php');
+include_once('models/Cliente.php');
+include_once('models/Pedido.php');
+include_once('models/ItemPedido.php');
 include_once('dao/PostgresDaoFactory.php');
 
 ini_set('display_errors', 1);

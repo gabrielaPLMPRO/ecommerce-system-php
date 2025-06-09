@@ -6,6 +6,7 @@ include_once('PostgresProdutoDao.php');
 include_once('PostgresEstoqueDao.php');
 include_once('PostgresPedidoDao.php');
 include_once('PostgresItensPedidoDao.php');
+include_once('PostgresClienteDao.php');
 include_once('PostgresUsuarioDao.php');
 
 class PostgresDaofactory {
@@ -51,6 +52,9 @@ class PostgresDaofactory {
     }
     public function getUsuarioDao(){
         return new PostgresUsuarioDao($this->getConnection());
+    }
+    public function getClienteDao(){
+        return new PostgresClienteDao($this->getConnection());
     }
 }
 ?>

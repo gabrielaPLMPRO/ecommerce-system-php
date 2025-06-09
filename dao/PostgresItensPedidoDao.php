@@ -59,5 +59,27 @@ class PostgresItensPedidoDao extends PostgresDao {
      
         return $itemPedido;
     }
+
+    public function buscaPorPedidoId($pedido_id) { // tem que ter como pesquisar pelo nome do cliente e numero do pedido
+        $itens = array();
+
+        $query = "SELECT
+                    id, pedido_id, produto_id, quantidade, preco_unitario, subtotal
+                FROM
+                    " . $this->table_name . 
+                    "  WHERE pedido_id = ?
+                     ORDER BY id ASC";
+     
+        $stmt = $this->conn->prepare( $query );
+        $stmt->bindValue(1, (int)$pedido_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $itens[] = new ItemPedido($id,$pedido_id,$produto_id,$quantidade,$preco_unitario,$subtotal);
+        }
+        
+        return $itens;
+    }
 }
 ?>
