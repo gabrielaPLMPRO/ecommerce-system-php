@@ -55,10 +55,16 @@ $(document).ready(function(){
 
   // Atualizar status do pedido via AJAX
   $(document).on('change', '.status-select', function() {
-    let pedidoId = $(this).data('id');
-    let status = $(this).val();
-    let dataEnvio = prompt("Informe a data de envio (YYYY-MM-DD), se aplicável:");
-    let dataCancelamento = prompt("Informe a data de cancelamento (YYYY-MM-DD), se aplicável:");
+    var pedidoId = $(this).data('id');
+    var status = $(this).val();
+    var dataEnvio, dataCancelamento;
+    if(status==="enviado"){
+      dataEnvio = prompt("Informe a data de envio (YYYY-MM-DD), se aplicável:");
+    }
+    else if(status==="cancelado"){
+      dataCancelamento = prompt("Informe a data de cancelamento (YYYY-MM-DD), se aplicável:");
+    }
+
     
     $.post('../controllers/PedidoController.php', {
       acao: 'atualizar_status',

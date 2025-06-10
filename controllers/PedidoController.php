@@ -30,9 +30,9 @@ if ($_POST['acao'] == 'carregar') {
                 </div>
                 <div>
                     <select class="status-select form-control form-control-sm" data-id="<?= $pedido->getId(); ?>">
-                        <option <?= $pedido->getStatus() == 'Novo' ? 'selected' : '' ?>>Novo</option>
-                        <option <?= $pedido->getStatus() == 'Enviado' ? 'selected' : '' ?>>Enviado</option>
-                        <option <?= $pedido->getStatus() == 'Cancelado' ? 'selected' : '' ?>>Cancelado</option>
+                        <option value="pendente" <?= $pedido->getStatus() == 'pendente' ? 'selected' : '' ?>>Pendente</option>
+                        <option value="enviado" <?= $pedido->getStatus() == 'enviado' ? 'selected' : '' ?>>Enviado</option>
+                        <option value="cancelado" <?= $pedido->getStatus() == 'cancelado' ? 'selected' : '' ?>>Cancelado</option>
                     </select>
                 </div>
             </div>
@@ -107,9 +107,9 @@ if ($_POST['acao'] == 'atualizar_status') {
     }
 
     $pedido->setStatus($status);
-    if ($status == "Enviado" && $data_envio) {
+    if ($status == "enviado" && $data_envio) {
         $pedido->setDataEntrega($data_envio);
-    } elseif ($status == "Cancelado" && $data_cancelamento) {
+    } elseif ($status == "cancelado" && $data_cancelamento) {
         $pedido->setDataEntrega($data_cancelamento); // ou outro campo de cancelamento se tiver
     }
 
