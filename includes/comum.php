@@ -10,4 +10,8 @@ function is_session_started()
     }
     return FALSE;
 }
+
+if (is_session_started() === FALSE) {
+  session_start();
+}
 ?>

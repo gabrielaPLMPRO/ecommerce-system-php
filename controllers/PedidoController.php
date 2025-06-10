@@ -1,5 +1,6 @@
 <?php
 include_once "../fachada.php";
+include_once '../includes/comum.php';
 
 $pedidoDao = $factory->getPedidoDao();
 $itensDao = $factory->getItensPedidoDao();
@@ -12,10 +13,11 @@ if ($_POST['acao'] == 'carregar') {
     $limite = 5;
     $inicio = ($pagina - 1) * $limite;
 
-    $pedidos = $pedidoDao->buscaComNomePaginado($query, $inicio, $limite);
-    $total = $pedidoDao->contaComNome($query);
+    $idUsuarioLogado=$_SESSION["tipo"]==="cliente"? $_SESSION["id_usuario"]:null;
 
-    ob_start();
+    $pedidos = $pedidoDao->buscaComNomePaginado($query, $inicio, $limite,$idUsuarioLogado);
+    $total = $pedidoDao->contaComNome($query,$idUsuarioLogado);
+
 
     foreach ($pedidos as $pedido) {
         $cliente = $clienteDao->buscaPorId($pedido->getClienteId()); // Assumindo que você tenha esse método
@@ -28,7 +30,7 @@ if ($_POST['acao'] == 'carregar') {
                     Data: <?= $pedido->getDataPedido(); ?> |
                     Total: R$ <?= number_format($pedido->getTotal(), 2, ',', '.'); ?>
                 </div>
-                <div>
+                <div <?php echo $_SESSION["tipo"]==="cliente"? 'hidden':''; ?>>
                     <select class="status-select form-control form-control-sm" data-id="<?= $pedido->getId(); ?>">
                         <option value="pendente" <?= $pedido->getStatus() == 'pendente' ? 'selected' : '' ?>>Pendente</option>
                         <option value="enviado" <?= $pedido->getStatus() == 'enviado' ? 'selected' : '' ?>>Enviado</option>
@@ -59,7 +61,6 @@ if ($_POST['acao'] == 'carregar') {
     }
     echo '</ul></nav>';
 
-    echo ob_get_clean();
     exit;
 }
 
@@ -111,6 +112,9 @@ if ($_POST['acao'] == 'atualizar_status') {
         $pedido->setDataEntrega($data_envio);
     } elseif ($status == "cancelado" && $data_cancelamento) {
         $pedido->setDataEntrega($data_cancelamento); // ou outro campo de cancelamento se tiver
+    }
+    else{
+        $pedido->setDataEntrega(null);
     }
 
     if ($pedidoDao->altera($pedido)) {

@@ -88,19 +88,34 @@ class PostgresPedidoDao extends PostgresDao {
         return $pedido;
     }
 
-    public function buscaComNomePaginado($numero,$inicio,$quantos) { // tem que ter como pesquisar pelo nome do cliente e numero do pedido
+    public function buscaComNomePaginado($numero,$inicio,$quantos, $idUsuarioLogado) { // tem que ter como pesquisar pelo nome do cliente e numero do pedido
         $pedidos = array();
 
         $query = "SELECT
                     id, cliente_id, usuario_id, status, numero, data_pedido, data_entrega, total
                 FROM
-                    " . $this->table_name . 
-                    " ORDER BY id ASC" .
-                    " LIMIT ? OFFSET ?";
+                    " . $this->table_name ;
+
+        if($idUsuarioLogado){
+            $query =$query . " WHERE usuario_id = ?";
+        }
+
+        $query= $query . 
+        " ORDER BY id ASC" .
+        " LIMIT ? OFFSET ?";
      
         $stmt = $this->conn->prepare( $query );
+
+        if($idUsuarioLogado){
+            $stmt->bindValue(1, (int)$idUsuarioLogado, PDO::PARAM_INT);
+            $stmt->bindValue(2, $quantos);
+            $stmt->bindValue(3, $inicio);
+        }
+        else{
         $stmt->bindValue(1, $quantos);
         $stmt->bindValue(2, $inicio);
+        }
+        
         $stmt->execute();
 
         $filter_query = $query . "LIMIT " .$quantos. " OFFSET " . $inicio . '';
@@ -114,14 +129,22 @@ class PostgresPedidoDao extends PostgresDao {
         return $pedidos;
     }
 
-    public function contaComNome($numero) {
+    public function contaComNome($numero, $idUsuarioLogado) {
 
         $quantos = 0;
 
         $query = "SELECT COUNT(*) AS contagem FROM " . 
                     $this->table_name ;
+
+        if($idUsuarioLogado){
+            $query =$query . " WHERE usuario_id = ?";
+        }
      
         $stmt = $this->conn->prepare( $query );
+
+        if($idUsuarioLogado){
+            $stmt->bindValue(1, (int)$idUsuarioLogado, PDO::PARAM_INT);
+        }
         
         $stmt->execute();
 
