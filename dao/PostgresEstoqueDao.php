@@ -32,22 +32,21 @@ class PostgresEstoqueDao extends PostgresDao {
 
     }
 
-    public function removePorProdutoId($produto_id) {
-        $query = "DELETE FROM " . $this->table_name . 
-        " WHERE produto_id = :produto_id";
+   public function removePorProdutoId($produto_id) {
+    $query = "DELETE FROM " . $this->table_name . 
+    " WHERE produto_id = :produto_id";
 
-        $stmt = $this->conn->prepare($query);
+    $stmt = $this->conn->prepare($query);
 
-        // bind parameters
-        $stmt->bindValue(':produto_id', (int)$id, PDO::PARAM_INT);
+    $stmt->bindValue(':produto_id', (int)$produto_id, PDO::PARAM_INT);
 
-        // execute the query
-        if($stmt->execute()){
-            return true;
-        }    
+    if($stmt->execute()){
+        return true;
+    }    
 
-        return false;
-    }
+    return false;
+}
+
     public function altera($estoque) {
 
         $query = "UPDATE " . $this->table_name . 

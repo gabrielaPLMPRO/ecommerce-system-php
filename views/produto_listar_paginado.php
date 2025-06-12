@@ -15,13 +15,13 @@ include "../includes/verifica.php";
   <body>
     <br />
     <div class="container">
-      <h3 align="center">Pesquisa com Paginação em PHP PostgreSQL (DAO Pattern) usando AJAX com JQuery </h3>
+      <h3 align="center">Produtos</h3>
       <br />
       <div class="card">
-        <div class="card-header">Dados dinâmicos</div>
+        <div class="card-header">Informações</div>
         <div class="card-body">
           <div class="form-group">
-            <input type="text" name="search_box" id="search_box" class="form-control" placeholder="Digite aqui letras do nome para pesquisar" />
+            <input type="text" name="search_box" id="search_box" class="form-control" placeholder="Nome do Produto" />
           </div>
            <a href="editar_produto.php" class="btn-aliexpress">
                 <i class="fas fa-plus"></i> Novo Produto
