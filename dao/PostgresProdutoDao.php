@@ -129,6 +129,28 @@ class PostgresProdutoDao extends PostgresDao {
         
         return $produtos;
     }
+    public function buscarTodos($nome) {
+        $produtos = array();
+
+        $query = "SELECT
+                    id, nome, descricao, foto, fornecedor_id
+                FROM
+                    " . $this->table_name . 
+                    " WHERE UPPER(nome) LIKE ?" .
+                    " ORDER BY id ASC" ;
+     
+        $stmt = $this->conn->prepare( $query );
+        $stmt->bindValue(1, '%' . strtoupper($nome) . '%');
+        $stmt->execute();
+
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $produtos[] = new Produto($id,$nome,$descricao,$foto, $fornecedor_id);
+        }
+        
+        return $produtos;
+    }
 
     public function contaComNome($nome) {
 

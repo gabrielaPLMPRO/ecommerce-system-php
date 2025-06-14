@@ -246,6 +246,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 echo $output;
                 break;
+            
+                case 'carregarCatalogo': 
+
+                $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+                $query = isset($_POST['query']) ? $_POST['query'] : '';
+
+                $produtosPorPagina = 6;
+                $inicio = ($page - 1) * $produtosPorPagina;
+
+                // Simulação de dados (substitua pelo seu banco)
+                $nome = $_POST['query'];
+                            
+                $limit = '5';
+                $page = 1;
+                if($_POST['page'] > 1)
+                {
+                $start = (($_POST['page'] - 1) * $limit);
+                $page = $_POST['page'];
+                }
+                else
+                {
+                $start = 0;
+                }
+
+                $todosProdutos = $dao->buscarTodos($nome);
+
+                $produtosPaginados = array_slice($todosProdutos, $inicio, $produtosPorPagina);
+
+                foreach ($produtosPaginados as $produto) {
+                    echo '<div class="col-md-4">';
+                    echo '<div class="product-card">';
+                    echo '<img src="data:image/png;base64,' . $produto->getFoto() . '" alt="Foto do Produto">';
+                    echo '<h5>'.$produto->getNome().'</h5>';
+                    echo '<p>'.substr($produto->getDescricao(), 0, 80).'...</p>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+
+                // Paginação
+                $totalPaginas = ceil(count($todosProdutos) / $produtosPorPagina);
+                if ($totalPaginas > 1) {
+                    echo '<div class="col-12"><nav><ul class="pagination justify-content-center">';
+                    for ($i = 1; $i <= $totalPaginas; $i++) {
+                        echo '<li class="page-item"><a class="page-link" data-page_number="'.$i.'" href="#">'.$i.'</a></li>';
+                    }
+                    echo '</ul></nav></div>';
+                }
+                break; 
         }
     }
 }
