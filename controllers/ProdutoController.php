@@ -247,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo $output;
                 break;
             
-                case 'carregarCatalogo': 
+            case 'carregarCatalogo': 
 
                 $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
                 $query = isset($_POST['query']) ? $_POST['query'] : '';
