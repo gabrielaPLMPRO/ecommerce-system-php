@@ -11,6 +11,8 @@ $daoFornecedor = $factory->getFornecedorDao();
 $produto = $dao->buscaPorId($id);
 $listaFornecedores= $daoFornecedor->buscarTudo();
 
+// $endereco = $dao->buscaPorId($idEndereco);
+
 if($produto==null) {
     $produto = new Produto( null, null, null, null);
 }
