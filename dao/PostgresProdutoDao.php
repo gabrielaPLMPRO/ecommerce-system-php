@@ -9,8 +9,8 @@ class PostgresProdutoDao extends PostgresDao {
     public function insere($produto) {
 
         $query = "INSERT INTO " . $this->table_name . 
-        " (nome, descricao, fornecedor_id) VALUES" .
-        " (:nome, :descricao, :fornecedor_id)";
+        " (nome, descricao, foto, fornecedor_id) VALUES" .
+        " (:nome, :descricao, :foto, :fornecedor_id)";
 
         $stmt = $this->conn->prepare($query);
 
@@ -18,10 +18,12 @@ class PostgresProdutoDao extends PostgresDao {
 
         $nome = $produto->getNome();
         $descricao = $produto->getDescricao();
+        $foto= $produto->getFoto();
         $fornecedor_id = $produto->getFornecedorId();
 
         $stmt->bindParam(":nome", $nome);
         $stmt->bindParam(":descricao", $descricao );
+        $stmt->bindParam(":foto", $foto );
         $stmt->bindParam(":fornecedor_id", $fornecedor_id);
       
         if($stmt->execute()){
@@ -50,18 +52,20 @@ class PostgresProdutoDao extends PostgresDao {
     public function altera($produto) {
 
         $query = "UPDATE " . $this->table_name . 
-        " SET nome = :nome, descricao = :descricao, fornecedor_id = :fornecedor_id" .
+        " SET nome = :nome, descricao = :descricao, , foto = :foto, fornecedor_id = :fornecedor_id" .
         " WHERE id = :id";
 
         $stmt = $this->conn->prepare($query);
 
         $nome = $produto->getNome();
         $descricao = $produto->getDescricao();
+        $foto = $produto->getFoto();
         $fornecedor_id = $produto->getFornecedorId();
         $id = $produto->getId();
 
         $stmt->bindParam(":nome", $nome);
         $stmt->bindParam(":descricao", $descricao);
+        $stmt->bindParam(":foto", $foto);
         $stmt->bindParam(":fornecedor_id", $fornecedor_id);
         $stmt->bindParam(":id", $id);
 
@@ -78,7 +82,7 @@ class PostgresProdutoDao extends PostgresDao {
         $produto = null;
 
         $query = "SELECT
-                    id, nome, descricao, fornecedor_id
+                    id, nome, descricao, foto, fornecedor_id
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -92,7 +96,7 @@ class PostgresProdutoDao extends PostgresDao {
      
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
-            $produto = new Produto($row['id'],$row['nome'], $row['descricao'], $row['fornecedor_id']);
+            $produto = new Produto($row['id'],$row['nome'], $row['descricao'], $row['foto'], $row['fornecedor_id']);
         } 
      
         return $produto;
@@ -102,7 +106,7 @@ class PostgresProdutoDao extends PostgresDao {
         $produtos = array();
 
         $query = "SELECT
-                    id, nome, descricao, fornecedor_id
+                    id, nome, descricao, foto, fornecedor_id
                 FROM
                     " . $this->table_name . 
                     " WHERE UPPER(nome) LIKE ?" .
@@ -120,7 +124,7 @@ class PostgresProdutoDao extends PostgresDao {
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
-            $produtos[] = new Produto($id,$nome,$descricao,$fornecedor_id);
+            $produtos[] = new Produto($id,$nome,$descricao,$foto, $fornecedor_id);
         }
         
         return $produtos;

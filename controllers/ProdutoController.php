@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $id = @$_POST["id"];
                 $nome = @$_POST["nome"];
                 $descricao = @$_POST["descricao"];
+                $foto = @$_POST["foto"];
                 $fornecedor_id = @$_POST["fornecedor_id"];
 
                 $preco = @$_POST["preco"]; 
@@ -21,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $produto = $dao->buscaPorId($id);
 
                 if($produto===null) {
-                    $produto= new Produto($id, $nome, $descricao, $fornecedor_id);
+                    $produto= new Produto($id, $nome, $descricao, $foto, $fornecedor_id);
 
                     $idProdutoInserido=$dao->insere($produto);
                     if ($idProdutoInserido!==false) {
@@ -39,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $produto->setNome($nome);
                     $produto->setDescricao($descricao);
+                    $produto->setFoto($foto);
                     $produto->setFornecedorId($fornecedor_id);
                     if ($dao->altera($produto)) {
                         header('Location: ../views/produto_listar_paginado.php?msg=alterado');
