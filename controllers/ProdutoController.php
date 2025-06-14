@@ -275,11 +275,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $produtosPaginados = array_slice($todosProdutos, $inicio, $produtosPorPagina);
 
                 foreach ($produtosPaginados as $produto) {
+                    $estoqueProduto= $daoEstoque->buscaProProdutoId($produto->getId());
+
                     echo '<div class="col-md-4">';
                     echo '<div class="product-card">';
                     echo '<img src="data:image/png;base64,' . $produto->getFoto() . '" alt="Foto do Produto">';
                     echo '<h5>'.$produto->getNome().'</h5>';
+                    echo '<p class="product-price text-danger fw-bold fs-4">R$ ' . number_format($estoqueProduto->getPreco(), 2, ',', '.') . '</p>';
                     echo '<p>'.substr($produto->getDescricao(), 0, 80).'...</p>';
+                    echo '<button class="btn-aliexpress addCarrinho" data-id="' . $produto->getId() . '">Adicionar ao Carrinho</button>';
                     echo '</div>';
                     echo '</div>';
                 }
@@ -294,6 +298,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     echo '</ul></nav></div>';
                 }
                 break; 
+            case 'AdicionarCarrinho':
+                session_start();
+
+                $produtoId = intval($_POST['produto_id']);
+
+                if (!isset($_SESSION['carrinho'])) {
+                    $_SESSION['carrinho'] = [];
+                }
+
+                if (isset($_SESSION['carrinho'][$produtoId])) {
+                    $_SESSION['carrinho'][$produtoId]['quantidade'] += 1;
+                } else {
+                    $_SESSION['carrinho'][$produtoId] = [
+                        'produto_id' => $produtoId,
+                        'quantidade' => 1
+                    ];
+                }
+
+                $totalItens = array_sum(array_column($_SESSION['carrinho'], 'quantidade'));
+
+                echo json_encode(['status' => 'ok', 'total_itens' => $totalItens]);
+
+                break;
+            case 'RemoverDoCarrinho':
+                session_start();
+                
+                $produtoId = intval($_POST['produto_id']);
+                if (isset($_SESSION['carrinho'][$produtoId])) {
+                    unset($_SESSION['carrinho'][$produtoId]);
+                }
+
+                echo json_encode(['status' => 'ok']);
+
+                break;
+            case 'AdicionarMaisCarrinho':
+                session_start();
+                $produtoId = intval($_POST['produto_id']);
+                $encontrado = false;
+
+                foreach ($_SESSION['carrinho'] as &$item) {
+                    if ($item['produto_id'] == $produtoId) {
+                        $item['quantidade'] += 1;
+                        $encontrado = true;
+                        break;
+                    }
+                }
+                unset($item); // Evita problemas de referência
+
+                // Se não estiver no carrinho, adiciona com quantidade 1
+                if (!$encontrado) {
+                    $_SESSION['carrinho'][] = [
+                        'produto_id' => $produtoId,
+                        'quantidade' => 1
+                    ];
+                }
+
+                echo json_encode(['status' => 'ok']);
+                break;
         }
     }
 }

@@ -97,6 +97,31 @@ class PostgresEstoqueDao extends PostgresDao {
         return $estoque;
     }
 
+    public function buscaProProdutoId($idProduto) {
+        
+        $estoque = null;
+
+        $query = "SELECT
+                    id, preco, estoque, produto_id
+                FROM
+                    " . $this->table_name . "
+                WHERE
+                    produto_id = ?
+                LIMIT
+                    1 OFFSET 0";
+     
+        $stmt = $this->conn->prepare( $query );
+        $stmt->bindValue(1, (int)$idProduto, PDO::PARAM_INT);
+        $stmt->execute();
+     
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row) {
+            $estoque = new Estoque($row['id'],$row['preco'], $row['estoque'], $row['produto_id']);
+        } 
+     
+        return $estoque;
+    }
+
     public function buscaComNomePaginado($nome,$inicio,$quantos) {
         $estoques = array();
 

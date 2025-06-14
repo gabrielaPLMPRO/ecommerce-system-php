@@ -6,6 +6,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .product-card {
             border: 1px solid #ddd;
@@ -38,6 +39,10 @@
             background-color: #ff2e2e;
             color: #fff;
         }
+        .product-price {
+            font-size: 1.5rem;
+            color: #f00;
+        }
     </style>
 </head>
 <body>
@@ -55,8 +60,7 @@
             </div>
         </div>
     </div>
-
-    <script>
+   <script>
     $(document).ready(function(){
 
         load_data(1);
@@ -83,8 +87,49 @@
             load_data(1, query);
         });
 
+        // Aqui a correção:
+        $(document).on('click', '.addCarrinho', function() {
+            var produtoId = $(this).data('id');
+
+            $.ajax({
+                url: "../controllers/ProdutoController.php",
+                method: "POST",
+                data: { produto_id: produtoId , acao: 'AdicionarCarrinho'},
+                success: function(response) {
+                    try {
+                        var json = JSON.parse(response);
+                        if (json.status === 'ok') {
+                            $('.cart-count').text(json.total_itens);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Adicionado!',
+                                text: 'O produto foi adicionado ao carrinho com sucesso!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        } else {
+                             Swal.fire({
+                                icon: 'error',
+                                title: 'Erro!',
+                                text: 'Ocorreu um problema ao adicionar ao carrinho.'
+                            });
+                        }
+                    } catch (e) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erro!',
+                            text: 'Ocorreu um problema ao adicionar ao carrinho.'
+                        });
+                    }
+                },
+                error: function() {
+                    alert('Erro de comunicação com o servidor.');
+                }
+            });
+        });
+
     });
-    </script>
+</script>
 </body>
 
 <?php include('../includes/footer.php'); ?>
