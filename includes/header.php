@@ -65,9 +65,7 @@ if (is_session_started() === FALSE) {
               🛒
               <?php
               $qtdItens = isset($_SESSION['carrinho']) ? array_sum(array_column($_SESSION['carrinho'], 'quantidade')) : 0;
-              if ($qtdItens > 0) {
-                echo "<span class='cart-count'>$qtdItens</span>";
-              }
+              echo "<span class='cart-count'>$qtdItens</span>";
               ?>
             </a></li>
       </ul>
