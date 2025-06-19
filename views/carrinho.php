@@ -60,7 +60,7 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
                     if (!empty($carrinho)) {
                         foreach ($carrinho as $item) {
                             $produto = $daoProduto->buscaPorId($item['produto_id']);
-                            $estoque = $daoEstoque->buscaProProdutoId($item['produto_id']);
+                            $estoque = $daoEstoque->buscaPorProdutoId($item['produto_id']);
 
                             if ($produto && $estoque) {
                                 $subtotal = $estoque->getPreco() * $item['quantidade'];
@@ -88,7 +88,7 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
                         ?>
                         <div class="col-12 mt-3">
                             <h5>Total Geral: R$ <?= number_format($totalGeral, 2, ',', '.'); ?></h5>
-                            <button class="btn btn-success">Finalizar Compra</button>
+                            <button class="btn btn-success btn-finalizar-compra">Finalizar Compra</button>
                         </div>
                         <?php
                     } else {
@@ -102,6 +102,42 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
 
     <script>
         $(document).ready(function(){
+
+            var qtdItensCarrinho=parseInt($('#qtdItensCarrinho').text());
+            if(qtdItensCarrinho>0){
+                $('.cart-count').show();
+            }
+            else{
+                $('.cart-count').hide();
+            }
+            $('.btn-finalizar-compra').click(function(){
+                $.ajax({
+                    url: '../controllers/PedidoController.php',
+                    method: 'POST',
+                    data: { acao: 'FinalizarCarrinho' },
+                    success: function(response){
+                        try {
+                            var res = JSON.parse(response);
+                            if(res.status == 'ok'){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Pedido Realizado!',
+                                    text: 'Número do Pedido: ' + res.numero,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.href = 'pedidos_listar_paginado.php'; // Troque para onde quiser redirecionar
+                                });
+                            } else {
+                                Swal.fire('Erro', res.mensagem, 'error');
+                            }
+                        } catch(e){
+                            Swal.fire('Erro', 'Falha ao processar pedido', 'error');
+                        }
+                    }
+                });
+            });
+
             $('.remover-item').click(function(){
                 var produtoId = $(this).data('id');
 

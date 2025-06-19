@@ -60,12 +60,18 @@ if (is_session_started() === FALSE) {
           echo "<li><span><a href='" . BASE_URL . "/views/login.php'>Efetuar Login</a></span></li>";
         }
         ?>
-         <li class="cart-icon">
+         <li class="cart-icon" 
+         <?php         
+         if(isset($_SESSION["nome_usuario"])&& $_SESSION["tipo"]==="admin" ) {
+          echo"hidden";
+         }
+          ?>>
             <a href="<?= BASE_URL ?>/views/carrinho.php" style="text-decoration: none; color: black; position: relative;">
               🛒
               <?php
               $qtdItens = isset($_SESSION['carrinho']) ? array_sum(array_column($_SESSION['carrinho'], 'quantidade')) : 0;
-              echo "<span class='cart-count'>$qtdItens</span>";
+
+              echo "<span class='cart-count' id=qtdItensCarrinho>$qtdItens</span>";
               ?>
             </a></li>
       </ul>

@@ -275,7 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $produtosPaginados = array_slice($todosProdutos, $inicio, $produtosPorPagina);
 
                 foreach ($produtosPaginados as $produto) {
-                    $estoqueProduto= $daoEstoque->buscaProProdutoId($produto->getId());
+                    $estoqueProduto= $daoEstoque->buscaPorProdutoId($produto->getId());
 
                     echo '<div class="col-md-4">';
                     echo '<div class="product-card">';
@@ -328,6 +328,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (isset($_SESSION['carrinho'][$produtoId])) {
                     unset($_SESSION['carrinho'][$produtoId]);
                 }
+
+                $totalItens = array_sum(array_column($_SESSION['carrinho'], 'quantidade'));
 
                 echo json_encode(['status' => 'ok']);
 

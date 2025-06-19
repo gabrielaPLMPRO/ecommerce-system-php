@@ -62,6 +62,13 @@
     </div>
    <script>
     $(document).ready(function(){
+        var qtdItensCarrinho=parseInt($('#qtdItensCarrinho').text());
+        if(qtdItensCarrinho>0){
+            $('.cart-count').show();
+        }
+        else{
+            $('.cart-count').hide();
+        }
 
         load_data(1);
 
@@ -100,6 +107,13 @@
                         var json = JSON.parse(response);
                         if (json.status === 'ok') {
                             $('.cart-count').text(json.total_itens);
+
+                            if(json.total_itens>0){
+                                $('.cart-count').show();
+                            }
+                            else{
+                                $('.cart-count').hide();
+                            }
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Adicionado!',

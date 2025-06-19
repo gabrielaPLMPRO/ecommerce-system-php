@@ -83,6 +83,31 @@ class PostgresClienteDao extends PostgresDao {
         return false;
     }
 
+    public function buscarPorUsuarioId($usuario_id) {
+        
+        $cliente = null;
+
+        $query = "SELECT
+                    id, nome, telefone, email, cartao_credito, endereco_id, usuario_id
+                FROM
+                    " . $this->table_name . "
+                WHERE
+                    usuario_id = ?
+                LIMIT
+                    1 OFFSET 0";
+     
+        $stmt = $this->conn->prepare( $query );
+        $stmt->bindValue(1, (int)$usuario_id, PDO::PARAM_INT);
+        $stmt->execute();
+     
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row) {
+            $cliente = new Cliente($row['id'],$row['nome'], $row['telefone'], $row['email'], $row['cartao_credito'], $row['endereco_id'], $row['usuario_id']);
+        } 
+     
+        return $cliente;
+    }
+
     public function buscaPorId($id) {
         
         $cliente = null;

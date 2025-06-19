@@ -97,7 +97,7 @@ class PostgresEstoqueDao extends PostgresDao {
         return $estoque;
     }
 
-    public function buscaProProdutoId($idProduto) {
+    public function buscaPorProdutoId($idProduto) {
         
         $estoque = null;
 

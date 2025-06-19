@@ -2,7 +2,7 @@
 <html>
 <?php 
 include('../includes/header.php'); 
-include "../includes/verifica.php";
+include "../includes/verifica_user.php";
 ?>
 
 <head>
@@ -13,7 +13,7 @@ include "../includes/verifica.php";
 </head>
 <body>
   <div class="container mt-4">
-    <h3 class="text-center">Consulta de Pedidos - Administração</h3>
+    <h3 class="text-center">Consulta de Pedidos</h3>
 
     <div class="card">
       <div class="card-header">Buscar Pedidos</div>
