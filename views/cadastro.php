@@ -43,6 +43,55 @@
                 <input type="password" class="form-control" id="senha" name="senha" required>
             </div>
 
+            <h5 class="text-center mb-3">Endereço</h5>
+
+            <div class="form-group">
+                <label for="rua">Rua</label>
+                <input type="text" class="form-control" id="rua" name="rua" required>
+            </div>
+
+            <div class="form-group">
+                <label for="numero">Número</label>
+                <input type="text" class="form-control" id="numero" name="numero" required>
+            </div>
+
+            <div class="form-group">
+                <label for="complemento">Complemento</label>
+                <input type="text" class="form-control" id="complemento" name="complemento" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bairro">Bairro</label>
+                <input type="text" class="form-control" id="bairro" name="bairro" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cidade">Cidade</label>
+                <input type="text" class="form-control" id="cidade" name="cidade" required>
+            </div>
+
+            <div class="form-group">
+                <label for="estado">Estado</label>
+                <input type="text" class="form-control" id="estado" name="estado" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cep">CEP</label>
+                <input type="text" class="form-control" id="cep" name="cep" required>
+            </div>
+
+            <h5 class="text-center mb-3">Dados Financeiros</h5>
+
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+                <input type="text" class="form-control" id="telefone" name="telefone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cartao_credito">Número Cartão de Crédito</label>
+                <input type="text" class="form-control" id="cartao_credito" name="cartao_credito" required>
+            </div>
+
             <hr>
            
             <div class="text-center">

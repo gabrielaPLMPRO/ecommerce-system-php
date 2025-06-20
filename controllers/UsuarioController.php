@@ -2,6 +2,8 @@
 include_once "../fachada.php";
 
 $dao = $factory->getUsuarioDao();
+$daoEndereco = $factory->getEnderecoDao();
+$daoCliente= $factory-> getClienteDao();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['acao'])) {
@@ -47,24 +49,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 break;
             case 'inserir':
 
+                //informacoes de usuario/cliente
                 $id = 0;
                 $nome = @$_POST["nome"];
                 $email = @$_POST["email"];
                 $senha = @$_POST["senha"];
-                
+
+                // informacoes de endereco
+                $rua = @$_POST["rua"]; 
+                $numero = @$_POST["numero"]; 
+                $complemento = @$_POST["complemento"]; 
+                $bairro = @$_POST["bairro"]; 
+                $cidade = @$_POST["cidade"]; 
+                $estado = @$_POST["estado"]; 
+                $cep = @$_POST["cep"]; 
+
+                //informacoes de cliente
+                $telefone = @$_POST["telefone"]; 
+                $cartao_credito = @$_POST["cartao_credito"]; 
+
+                $endereco= new Endereco(0, $rua, $numero, $complemento, $bairro, $cep, $cidade, $estado);
                 $usuario= new Usuario($id, $nome,$email,$senha, 'cliente');
 
+                $idEnderecoInserido=$daoEndereco->insere($endereco);
                 $idInserido=$dao->insere($usuario);
-                if (!$idInserido) {
+
+                if (!$idInserido ||!$idEnderecoInserido) {
                     header('Location: ../views/cadastro.php?msg=erro');
                 } else {
-                    session_start();
+                    $cliente= new Cliente(0,$nome,$telefone,$email,$cartao_credito,$idEnderecoInserido,$idInserido);
                     
-                    $_SESSION["id_usuario"]=$idInserido; 
-                    $_SESSION["nome_usuario"] = stripslashes($usuario->getNome());
-                    $_SESSION["tipo"] = stripslashes($usuario->getTipo());
+                    $idClienteInserido= $daoCliente->insere($cliente); 
+                    if(!$idClienteInserido){
+                        header('Location: ../views/cadastro.php?msg=erro');
+                    }
+                    else{
+                        session_start();
+                        
+                        $_SESSION["id_usuario"]=$idInserido; 
+                        $_SESSION["nome_usuario"] = stripslashes($usuario->getNome());
+                        $_SESSION["tipo"] = stripslashes($usuario->getTipo());
 
-                    header('Location: ../views/index.php');
+                        header('Location: ../views/index.php');
+                    }
                 }
                 break;
             case 'excluir':
