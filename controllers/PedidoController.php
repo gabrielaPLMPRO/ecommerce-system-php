@@ -125,60 +125,71 @@ switch($_POST['acao']){
         exit;
         break;
     case 'FinalizarCarrinho':
-        $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
-        
-        if(empty($carrinho)){
-            echo json_encode(['status' => 'erro', 'mensagem' => 'Carrinho vazio!']);
+        try{
+            $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
+            
+            if(empty($carrinho)){
+                throw new Exception('Carrinho vazio!');
+            }
+
+            $usuarioId = $_SESSION['id_usuario'];
+
+            $cliente= $clienteDao->buscarPorUsuarioId($usuarioId);
+
+            $clienteId=$cliente->getId();
+
+            $numeroPedido = time(); 
+            $dataPedido = date('Y-m-d H:i:s');
+            $dataEntrega= date('Y-m-d H:i:s', strtotime('+7 days'));
+            $status = 'pendente';
+            
+            $totalGeral = 0;
+
+            // Calcula o total do pedido
+            foreach($carrinho as $item){
+                $estoque = $estoqueDao->buscaPorProdutoId($item['produto_id']);
+                $produto=$produtoDao->buscaPorId($item['produto_id']);
+                if($estoque){
+                    if($item['quantidade']>$estoque->getEstoque()){
+                        throw new Exception('Quantidade inválida, máximo disponível do produto "'.$produto->getNome().'" é '.$estoque->getEstoque());
+                    }
+                    $totalGeral += ($estoque->getPreco() * $item['quantidade']);
+                }
+            }
+
+            // Monta o objeto Pedido
+            $pedido = new Pedido(0, $clienteId, $usuarioId, $status, $numeroPedido, $dataPedido, $dataEntrega, $totalGeral);
+            $pedidoId = $pedidoDao->insere($pedido);
+
+            if(!$pedidoId){
+                throw new Exception('Erro ao salvar o pedido');
+            }
+
+            foreach($carrinho as $item){
+                $estoque = $estoqueDao->buscaPorProdutoId($item['produto_id']);
+                if($estoque){
+                    $precoUnitario = $estoque->getPreco();
+                    $quantidade = $item['quantidade'];
+                    $subtotal = $precoUnitario * $quantidade;
+
+                    $itemPedido = new ItemPedido(null, $pedidoId, $item['produto_id'], $quantidade, $precoUnitario, $subtotal);
+                    $itensDao->insere($itemPedido);
+
+                    //subtrai itens do estoque
+                    $estoqueDao->alterEstoque($item['produto_id'], $estoque->getEstoque()-$quantidade);
+                }
+            }
+
+            // Limpar o carrinho
+            $_SESSION['carrinho'] = [];
+
+            echo json_encode(['status' => 'ok', 'numero' => $numeroPedido]);
             exit;
         }
-
-        $usuarioId = $_SESSION['id_usuario'];
-
-        $cliente= $clienteDao->buscarPorUsuarioId($usuarioId);
-
-        $clienteId=$cliente->getId();
-
-        $numeroPedido = time(); 
-        $dataPedido = date('Y-m-d H:i:s');
-        $dataEntrega= date('Y-m-d H:i:s', strtotime('+7 days'));
-        $status = 'pendente';
+        catch(Exception $e){
+            echo json_encode(['status' => 'erro', 'mensagem' => $e->getMessage()]);
+        }
         
-        $totalGeral = 0;
-
-        // Calcula o total do pedido
-        foreach($carrinho as $item){
-            $estoque = $estoqueDao->buscaPorProdutoId($item['produto_id']);
-            if($estoque){
-                $totalGeral += ($estoque->getPreco() * $item['quantidade']);
-            }
-        }
-
-        // Monta o objeto Pedido
-        $pedido = new Pedido(0, $clienteId, $usuarioId, $status, $numeroPedido, $dataPedido, $dataEntrega, $totalGeral);
-        $pedidoId = $pedidoDao->insere($pedido);
-
-        if(!$pedidoId){
-            echo json_encode(['status' => 'erro', 'mensagem' => 'Erro ao salvar o pedido']);
-            exit;
-        }
-
-        foreach($carrinho as $item){
-            $estoque = $estoqueDao->buscaPorProdutoId($item['produto_id']);
-            if($estoque){
-                $precoUnitario = $estoque->getPreco();
-                $quantidade = $item['quantidade'];
-                $subtotal = $precoUnitario * $quantidade;
-
-                $itemPedido = new ItemPedido(null, $pedidoId, $item['produto_id'], $quantidade, $precoUnitario, $subtotal);
-                $itensDao->insere($itemPedido);
-            }
-        }
-
-        // Limpar o carrinho
-        $_SESSION['carrinho'] = [];
-
-        echo json_encode(['status' => 'ok', 'numero' => $numeroPedido]);
-        exit;
         break; 
 }
 ?>

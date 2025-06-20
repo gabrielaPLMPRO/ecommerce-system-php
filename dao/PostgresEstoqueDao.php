@@ -170,5 +170,23 @@ class PostgresEstoqueDao extends PostgresDao {
         
         return $quantos;
     }
+    public function alterEstoque($produtoId, $qtd) {
+
+        $query = "UPDATE " . $this->table_name . 
+        " SET estoque = :estoque" .
+        " WHERE produto_id = :produto_id";
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(":estoque", $qtd);
+        $stmt->bindParam(":produto_id", $produtoId);
+
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }    
+
+        return false;
+    }
 }
 ?>
