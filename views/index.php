@@ -122,11 +122,7 @@
                                 showConfirmButton: false
                             });
                         } else {
-                             Swal.fire({
-                                icon: 'error',
-                                title: 'Erro!',
-                                text: 'Ocorreu um problema ao adicionar ao carrinho.'
-                            });
+                            Swal.fire('Erro', json.mensagem, 'error');
                         }
                     } catch (e) {
                         Swal.fire({

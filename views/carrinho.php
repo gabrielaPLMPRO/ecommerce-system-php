@@ -167,15 +167,26 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
                     method: 'POST',
                     data: { acao: 'AdicionarMaisCarrinho', produto_id: produtoId },
                     success: function(response){
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Adicionado!',
-                            text: 'Mais uma unidade foi adicionada ao carrinho.',
-                            timer: 1200,
-                            showConfirmButton: false
-                        }).then(() => {
-                            location.reload();
-                        });
+                        try {
+                            var res = JSON.parse(response);
+                            if(res.status == 'ok'){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Adicionado!',
+                                    text: 'Mais uma unidade foi adicionada ao carrinho.',
+                                    timer: 1200,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    location.reload();
+                                });    
+                            }
+                            else{
+                                Swal.fire('Erro', res.mensagem, 'error');
+                            }
+                        } catch(e) {
+                            console.error('Erro ao parsear JSON:', e, response);
+                            Swal.fire('Erro', 'Erro inesperado ao processar a resposta.', 'error');
+                        }
                     }
                 });
             });

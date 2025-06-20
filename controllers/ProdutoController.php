@@ -302,12 +302,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 session_start();
 
                 $produtoId = intval($_POST['produto_id']);
+                
+                $estoqueDoItem=$daoEstoque->buscaPorProdutoId($produtoId);
+
+                $qtdEmEstoque=$estoqueDoItem->getEstoque();
 
                 if (!isset($_SESSION['carrinho'])) {
                     $_SESSION['carrinho'] = [];
                 }
 
                 if (isset($_SESSION['carrinho'][$produtoId])) {
+                    $quantidadeNoCarrinho=$_SESSION['carrinho'][$produtoId]['quantidade']+1; 
+
+                    if($qtdEmEstoque< $quantidadeNoCarrinho){
+                        echo json_encode(['status' => 'error', 'mensagem'=> 'Não é possível adicionar mais desse item, quantidade máxima em estoque: '.$qtdEmEstoque]);
+                        break;
+                    }
+                    
                     $_SESSION['carrinho'][$produtoId]['quantidade'] += 1;
                 } else {
                     $_SESSION['carrinho'][$produtoId] = [
@@ -337,26 +348,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'AdicionarMaisCarrinho':
                 session_start();
                 $produtoId = intval($_POST['produto_id']);
-                $encontrado = false;
+                // $encontrado = false;
+                $erro=false;
 
                 foreach ($_SESSION['carrinho'] as &$item) {
                     if ($item['produto_id'] == $produtoId) {
+                        $quantidadeNoCarrinho=$item['quantidade']+1;
+                        
+                        //validar se tem essa qtd no estoque
+                        $estoqueDoItem=$daoEstoque->buscaPorProdutoId($produtoId);
+
+                        $qtdEmEstoque=$estoqueDoItem->getEstoque();
+
+                        if($qtdEmEstoque< $quantidadeNoCarrinho){
+                            echo json_encode(['status' => 'error', 'mensagem'=> 'Não é possível adicionar mais desse item, quantidade máxima em estoque: '.$qtdEmEstoque]);
+                            $erro=true;
+                            break;
+                        }
+                        
                         $item['quantidade'] += 1;
-                        $encontrado = true;
+                        // $encontrado = true;
                         break;
                     }
                 }
-                unset($item); // Evita problemas de referência
+                unset($item); 
 
-                // Se não estiver no carrinho, adiciona com quantidade 1
-                if (!$encontrado) {
-                    $_SESSION['carrinho'][] = [
-                        'produto_id' => $produtoId,
-                        'quantidade' => 1
-                    ];
+                // if (!$encontrado) {
+                //     $_SESSION['carrinho'][] = [
+                //         'produto_id' => $produtoId,
+                //         'quantidade' => 1
+                //     ];
+                // }
+
+                if(!$erro){
+                    echo json_encode(['status' => 'ok']);
                 }
-
-                echo json_encode(['status' => 'ok']);
                 break;
         }
     }
