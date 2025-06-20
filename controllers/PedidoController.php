@@ -68,8 +68,36 @@ switch($_POST['acao']){
     case 'carregar_itens':
         $pedido_id = $_POST['pedido_id'];
         $itens = $itensDao->buscaPorPedidoId($pedido_id);
-
         ?>
+
+        <!-- Carrossel com todas as fotos dos produtos do pedido -->
+       <div id="carouselPedido<?= $pedido_id ?>" class="carousel slide mb-4" data-ride="carousel">
+            <div class="carousel-inner">
+                <?php foreach ($itens as $index => $item): 
+                    $produto = $produtoDao->buscaPorId($item->getProdutoId());
+                ?>
+                <div class="carousel-item <?= ($index == 0) ? 'active' : '' ?>">
+                    <img src="data:image/png;base64,<?= $produto->getFoto(); ?>" class="d-block mx-auto" alt="Produto" style="max-height: 200px;">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5><?= $produto->getNome(); ?></h5>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Botões personalizados com fundo escuro e setas brancas -->
+            <a class="carousel-control-prev" href="#carouselPedido<?= $pedido_id ?>" role="button" data-slide="prev" style="background-color: rgba(0,0,0,0.5); width: 40px; height: 40px; top: 50%; transform: translateY(-50%); border-radius: 50%;">
+                <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1);"></span>
+                <span class="sr-only">Anterior</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselPedido<?= $pedido_id ?>" role="button" data-slide="next" style="background-color: rgba(0,0,0,0.5); width: 40px; height: 40px; top: 50%; transform: translateY(-50%); border-radius: 50%;">
+                <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(1);"></span>
+                <span class="sr-only">Próximo</span>
+            </a>
+        </div>
+
+
+        <!-- Tabela com detalhes dos itens -->
         <table class="table table-sm">
             <thead>
                 <tr>
@@ -81,17 +109,22 @@ switch($_POST['acao']){
                 </tr>
             </thead>
             <tbody>
-            <?php foreach ($itens as $item): ?>
-                <tr>
-                    <td><img src="../img/produtos/<?= $item->getProdutoId(); ?>.jpg" width="50"></td>
-                    <td><?= $produtoDao->buscaPorId($item->getProdutoId())->getDescricao(); ?></td>
-                    <td><?= $item->getQuantidade(); ?></td>
-                    <td>R$ <?= number_format($item->getPrecoUnitario(), 2, ',', '.'); ?></td>
-                    <td>R$ <?= number_format($item->getSubtotal(), 2, ',', '.'); ?></td>
-                </tr>
-            <?php endforeach; ?>
+                <?php foreach ($itens as $item): 
+                    $produto = $produtoDao->buscaPorId($item->getProdutoId());
+                    ?>
+                    <tr>
+                        <td>
+                            <img src="data:image/png;base64,<?= $produto->getFoto(); ?>" alt="Produto" style="max-width: 50px; max-height: 50px;">
+                        </td>
+                        <td><?= $produto->getDescricao(); ?></td>
+                        <td><?= $item->getQuantidade(); ?></td>
+                        <td>R$ <?= number_format($item->getPrecoUnitario(), 2, ',', '.'); ?></td>
+                        <td>R$ <?= number_format($item->getSubtotal(), 2, ',', '.'); ?></td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
+
         <?php
         exit;
         break;
