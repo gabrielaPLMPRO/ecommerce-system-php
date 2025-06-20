@@ -43,6 +43,22 @@
             font-size: 1.5rem;
             color: #f00;
         }
+        .imagem-cinza {
+            filter: grayscale(100%);
+            opacity: 0.6;
+            pointer-events: none; /* Opcional: impede clique, se fosse imagem clicável */
+        }
+        .btn-indisponivel {
+            background-color: #cccccc;
+            color: #666666;
+            border-radius: 5px;
+            padding: 8px 15px;
+            text-decoration: none;
+        }
+        .btn-indisponivel:hover {
+            background-color: #cccccc;
+            color: #666666;
+        }
     </style>
 </head>
 <body>

@@ -275,15 +275,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $produtosPaginados = array_slice($todosProdutos, $inicio, $produtosPorPagina);
 
                 foreach ($produtosPaginados as $produto) {
-                    $estoqueProduto= $daoEstoque->buscaPorProdutoId($produto->getId());
+                    $estoqueProduto = $daoEstoque->buscaPorProdutoId($produto->getId());
+
+                    $semEstoque = ($estoqueProduto->getEstoque() == 0);
+
+                    // Classe para imagem cinza
+                    $classeImagem = $semEstoque ? 'imagem-cinza' : '';
+
+                    // Configuração do botão
+                    $disabled = $semEstoque ? 'disabled' : '';
+                    $classeBotao = $semEstoque ? 'btn-indisponivel' : 'btn-aliexpress';
+                    $textoBotao = $semEstoque ? 'Indisponível' : 'Adicionar ao Carrinho';
+                    $title = $semEstoque ? 'Produto sem estoque' : '';
 
                     echo '<div class="col-md-4">';
                     echo '<div class="product-card">';
-                    echo '<img src="data:image/png;base64,' . $produto->getFoto() . '" alt="Foto do Produto">';
-                    echo '<h5>'.$produto->getNome().'</h5>';
+                    echo '<img src="data:image/png;base64,' . $produto->getFoto() . '" alt="Foto do Produto" class="' . $classeImagem . '">';
+                    echo '<h5>' . $produto->getNome() . '</h5>';
                     echo '<p class="product-price text-danger fw-bold fs-4">R$ ' . number_format($estoqueProduto->getPreco(), 2, ',', '.') . '</p>';
-                    echo '<p>'.substr($produto->getDescricao(), 0, 80).'...</p>';
-                    echo '<button class="btn-aliexpress addCarrinho" data-id="' . $produto->getId() . '">Adicionar ao Carrinho</button>';
+                    echo '<p>' . substr($produto->getDescricao(), 0, 80) . '...</p>';
+                    echo '<button class="' . $classeBotao . ' addCarrinho" data-id="' . $produto->getId() . '" ' . $disabled . ' title="' . $title . '">' . $textoBotao . '</button>';
                     echo '</div>';
                     echo '</div>';
                 }
