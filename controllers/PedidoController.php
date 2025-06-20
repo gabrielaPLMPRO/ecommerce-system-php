@@ -159,6 +159,10 @@ switch($_POST['acao']){
         break;
     case 'FinalizarCarrinho':
         try{
+           if (!isset($_SESSION['id_usuario'])) {
+                echo json_encode(['status' => 'deslogado', 'mensagem' => 'Usuário não autenticado. Faça login para continuar.']);
+                exit;
+            }
             $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
             
             if(empty($carrinho)){

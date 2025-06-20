@@ -90,6 +90,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $_SESSION["nome_usuario"] = stripslashes($usuario->getNome());
                         $_SESSION["tipo"] = stripslashes($usuario->getTipo());
 
+                        $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
+            
+                        if(!empty($carrinho)){
+                            header('Location: ../views/carrinho.php');
+                            exit;
+                        }
+
                         header('Location: ../views/index.php');
                     }
                 }
@@ -114,17 +121,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 if($autenticou){
+                    
+                    //adicionado pois ja pode ter uma session com as informacoes do carrinho
+
                     session_start();
 
                     $_SESSION["id_usuario"]= $usuario->getId(); 
                     $_SESSION["nome_usuario"] = stripslashes($usuario->getNome());
                     $_SESSION["tipo"] = stripslashes($usuario->getTipo());
 
+                    $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
+            
+                    if(!empty($carrinho)){
+                        header('Location: ../views/carrinho.php');
+                        exit;
+                    }
+
                     if($usuario->getTipo()==="admin"){
                         header('Location: ../views/indexAdmin.php');
+                        exit;
                     }
                     else{
                         header('Location: ../views/index.php');
+                        exit;
                     }
                 }
                 else{

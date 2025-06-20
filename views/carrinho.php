@@ -126,9 +126,13 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
                                     timer: 2000,
                                     showConfirmButton: false
                                 }).then(() => {
-                                    window.location.href = 'pedidos_listar_paginado.php'; // Troque para onde quiser redirecionar
+                                    window.location.href = 'pedidos_listar_paginado.php'; 
                                 });
-                            } else {
+                            } 
+                            else if(res.status=='deslogado'){
+                                window.location.href = 'login.php'; 
+                            }
+                            else{
                                 Swal.fire('Erro', res.mensagem, 'error');
                             }
                         } catch(e){
