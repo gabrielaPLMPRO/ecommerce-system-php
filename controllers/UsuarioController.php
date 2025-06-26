@@ -12,38 +12,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $id = @$_POST["id"];
                 $nome = @$_POST["nome"];
-                $descricao = @$_POST["descricao"];
-                $fornecedor_id = @$_POST["fornecedor_id"];
+                $email = @$_POST["email"];
+                $senha = @$_POST["senha"];
+                $tipo = @$_POST["tipo"];
 
-                $preco = @$_POST["preco"]; 
-                $qtdEstoque = @$_POST["quantidade"]; 
+                $usuario = $dao->buscaPorId($id);
 
-                $produto = $dao->buscaPorId($id);
+                if($usuario===null) {
+                    $usuario= new Usuario($id, $nome, $email, $senha, "admin");
 
-                if($produto===null) {
-                    $produto= new Produto($id, $nome, $descricao, $fornecedor_id);
-
-                    $idProdutoInserido=$dao->insere($produto);
-                    if ($idProdutoInserido!==false) {
-                        
-                        $estoque = new Estoque( 0, $preco, $qtdEstoque,$idProdutoInserido);
-                        if ($daoEstoque->insere($estoque)) {
-                            header('Location: ../views/produto_listar_paginado.php?msg=inserido');
-                        } else {
-                            header('Location: ../views/produto_listar_paginado.php?msg=erro');
-                        }
-
+                    if($dao->insere($usuario))
+                    {
+                        header('Location: ../views/usuario_listar_paginado.php?msg=inserido');
                     } else {
-                        header('Location: ../views/produto_listar_paginado.php?msg=erro');
+                        header('Location: ../views/usuario_listar_paginado.php?msg=erro');
                     }
                 } else {
-                    $produto->setNome($nome);
-                    $produto->setDescricao($descricao);
-                    $produto->setFornecedorId($fornecedor_id);
-                    if ($dao->altera($produto)) {
-                        header('Location: ../views/produto_listar_paginado.php?msg=alterado');
+                    $usuario->setNome($nome);
+
+                    if($usuario->getTipo()=="cliente"){
+                        $usuario->setTipo($tipo);
+                    }
+                    else{
+                        $usuario->setTipo('admin');
+                    }
+
+                    if ($dao->altera($usuario)) {
+                        header('Location: ../views/usuario_listar_paginado.php?msg=alterado');
                     } else {
-                        header('Location: ../views/produto_listar_paginado.php?msg=erro');
+                        header('Location: ../views/usuario_listar_paginado.php?msg=erro');
                     }
                 }
                 break;
@@ -104,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'excluir':
                 $idExcluir = @$_POST["idExcluir"];
                 $dao->removePorId($idExcluir);
-                header('Location: ../views/produto_listar_paginado.php?msg=excluido');
+                header('Location: ../views/usuario_listar_paginado.php?msg=excluido');
                 break;
             case 'executarLogin': 
 
@@ -166,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $start = 0;
                 }
 
-                $produtos = $dao->buscaComNomePaginado($nome,$start,$limit);
+                $usuarios = $dao->buscaComNomePaginado($nome,$start,$limit);
                 $total_data = $dao->contaComNome($nome);
 
                 $output = '
@@ -175,32 +172,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tr>
                     <th>ID</th>
                     <th>Nome</th>
-                    <th>Descrição</th>
-                    <th>Fornecedor</th>
+                    <th>Email</th>
+                    <th>Tipo</th>
                     <th>Ações</th>
                 </tr>
                 ';
                 if($total_data > 0)
                 {
-                foreach($produtos as $produto)
+                foreach($usuarios as $usuario)
                 {
-                    $fornecedor=$daoFornecedor->buscaPorId($produto->getFornecedorId());
-
                     $output .= '
                     <tr>
-                    <td>'.$produto->getId().'</td>
-                    <td>'.$produto->getNome().'</td>
-                    <td>'.$produto->getDescricao().'</td>
-                    <td>'.$fornecedor->getNome().'</td>
+                    <td>'.$usuario->getId().'</td>
+                    <td>'.$usuario->getNome().'</td>
+                    <td>'.$usuario->getEmail().'</td>
+                    <td>'.$usuario->getTipo().'</td>
                     <td>
-                                    <a href="editar_produto.php?id='.$produto->getId().'"
+                                    <a href="editar_usuario.php?id='.$usuario->getId().'"
                                         class="btn btn-warning btn-sm btn-custom-actions" data-toggle="tooltip" title="Editar">
                                         <i class="fas fa-edit icon"></i>
                                     </a>
-                                    <form action="../controllers/FornecedorController.php" method="POST" style="display:inline;"
-                                        onsubmit="return confirm("Tem certeza que deseja excluir este fornecedor?");">
+                                    <form action="../controllers/UsuarioController.php" method="POST" style="display:inline;"
+                                        onsubmit="return confirm("Tem certeza que deseja excluir este usuário?");">
                                         <input type="hidden" name="acao" value="excluir">
-                                        <input type="hidden" name="idExcluir" value='.$produto->getId().'">
+                                        <input type="hidden" name="idExcluir" value='.$usuario->getId().'">
                                         <button type="submit" class="btn btn-danger btn-sm btn-custom-actions"
                                             data-toggle="tooltip" title="Excluir">
                                             <i class="fas fa-trash-alt icon"></i>

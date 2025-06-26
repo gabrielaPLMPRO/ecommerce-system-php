@@ -122,52 +122,76 @@ class PostgresEstoqueDao extends PostgresDao {
         return $estoque;
     }
 
-    public function buscaComNomePaginado($nome,$inicio,$quantos) {
+  public function buscaComNomePaginado($nome, $inicio, $quantos) {
         $estoques = array();
+        $isNumero = is_numeric($nome);
 
         $query = "SELECT
                     e.id, e.preco, e.estoque, e.produto_id
                 FROM
-                    " . $this->table_name . " e, produtos p".
-                    " WHERE UPPER(p.nome) LIKE ?" .
-                    " and e.produto_id=p.id".
-                    " ORDER BY id ASC" .
-                    " LIMIT ? OFFSET ?";
-     
-        $stmt = $this->conn->prepare( $query );
+                    " . $this->table_name . " e
+                JOIN produtos p ON p.id = e.produto_id
+                WHERE (UPPER(p.nome) LIKE ?";
+
+        if ($isNumero) {
+            $query .= " OR e.id = ?";
+        }
+
+        $query .= ") ORDER BY e.id ASC LIMIT ? OFFSET ?";
+
+        $stmt = $this->conn->prepare($query);
+
         $stmt->bindValue(1, '%' . strtoupper($nome) . '%');
-        $stmt->bindValue(2, $quantos);
-        $stmt->bindValue(3, $inicio);
+
+        if ($isNumero) {
+            $stmt->bindValue(2, (int)$nome, PDO::PARAM_INT);
+            $stmt->bindValue(3, $quantos, PDO::PARAM_INT);
+            $stmt->bindValue(4, $inicio, PDO::PARAM_INT);
+        } else {
+            $stmt->bindValue(2, $quantos, PDO::PARAM_INT);
+            $stmt->bindValue(3, $inicio, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
-        $filter_query = $query . "LIMIT " .$quantos. " OFFSET " . $inicio . '';
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
-            $estoques[] = new Estoque($id,$preco,$estoque,$produto_id);
+            $estoques[] = new Estoque($id, $preco, $estoque, $produto_id);
         }
-        
+
         return $estoques;
     }
 
-    public function contaComNome($nome) {
-
+   public function contaComNome($nome) {
         $quantos = 0;
+        $isNumero = is_numeric($nome);
 
-        $query = "SELECT COUNT(*) AS contagem FROM " . 
-                    $this->table_name ." e, produtos p where p.id=e.produto_id".
-                    " and UPPER(p.nome) LIKE ? ";
-     
-        $stmt = $this->conn->prepare( $query );
+        $query = "SELECT COUNT(*) AS contagem
+                FROM " . $this->table_name . " e
+                JOIN produtos p ON p.id = e.produto_id
+                WHERE (UPPER(p.nome) LIKE ?";
+
+        if ($isNumero) {
+            $query .= " OR e.id = ?";
+        }
+
+        $query .= ")";
+
+        $stmt = $this->conn->prepare($query);
+
         $stmt->bindValue(1, '%' . strtoupper($nome) . '%');
-        
+
+        if ($isNumero) {
+            $stmt->bindValue(2, (int)$nome, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
-        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
             $quantos = $contagem;
         }
-        
+
         return $quantos;
     }
     public function alterEstoque($produtoId, $qtd) {

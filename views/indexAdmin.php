@@ -12,24 +12,8 @@
 <div class="container dashboard-container">
   <div class="row g-4">
 
-  <div class="col-md-6 col-lg-4 mb-4">
-      <a href="editar_produto.php" class="text-decoration-none text-dark">
-        <div class="dashboard-card">
-          <div class="dashboard-title">Cadastrar Produto</div>
-        </div>
-      </a>
-    </div>
-
     <div class="col-md-6 col-lg-4 mb-4">
-      <a href="editar_fornecedor.php" class="text-decoration-none text-dark">
-        <div class="dashboard-card">
-          <div class="dashboard-title">Cadastrar Fornecedor</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-md-6 col-lg-4 mb-4">
-      <a href="estoque/listar.php" class="text-decoration-none text-dark">
+      <a href="estoque/listar_paginado.php" class="text-decoration-none text-dark">
         <div class="dashboard-card">
           <div class="dashboard-title">Manutenção de Estoque</div>
         </div>
@@ -53,9 +37,17 @@
     </div>
 
     <div class="col-md-6 col-lg-4 mb-4">
-      <a href="usuario_listar.php" class="text-decoration-none text-dark">
+      <a href="usuario_listar_paginado.php" class="text-decoration-none text-dark">
         <div class="dashboard-card">
           <div class="dashboard-title">Listar Usuários</div>
+        </div>
+      </a>
+    </div>
+
+     <div class="col-md-6 col-lg-4 mb-4">
+      <a href="pedidos_listar_paginado.php" class="text-decoration-none text-dark">
+        <div class="dashboard-card">
+          <div class="dashboard-title">Gerenciar Pedidos</div>
         </div>
       </a>
     </div>

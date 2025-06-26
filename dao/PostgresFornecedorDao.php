@@ -127,52 +127,78 @@ class PostgresFornecedorDao extends PostgresDao {
         return $fornecedores;
     }
 
-    public function buscaComNomePaginado($nome,$inicio,$quantos) {
+    public function buscaComNomePaginado($nome, $inicio, $quantos) {
         $fornecedores = array();
+        $isNumero = is_numeric($nome);
 
         $query = "SELECT
                     id, nome, descricao, telefone, email, endereco_id
-                FROM
-                    " . $this->table_name . 
-                    " WHERE UPPER(nome) LIKE ?" .
-                    " ORDER BY id ASC" .
-                    " LIMIT ? OFFSET ?";
-     
-        $stmt = $this->conn->prepare( $query );
+                FROM " . $this->table_name . "
+                WHERE (UPPER(nome) LIKE ?";
+
+        if ($isNumero) {
+            $query .= " OR id = ?";
+        }
+
+        $query .= ") ORDER BY id ASC LIMIT ? OFFSET ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        // Bind dos parâmetros
         $stmt->bindValue(1, '%' . strtoupper($nome) . '%');
-        $stmt->bindValue(2, $quantos);
-        $stmt->bindValue(3, $inicio);
+
+        if ($isNumero) {
+            $stmt->bindValue(2, (int)$nome, PDO::PARAM_INT);
+            $stmt->bindValue(3, $quantos, PDO::PARAM_INT);
+            $stmt->bindValue(4, $inicio, PDO::PARAM_INT);
+        } else {
+            $stmt->bindValue(2, $quantos, PDO::PARAM_INT);
+            $stmt->bindValue(3, $inicio, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
-        $filter_query = $query . "LIMIT " .$quantos. " OFFSET " . $inicio . '';
+        $filter_query = $query . " LIMIT " . $quantos . " OFFSET " . $inicio;
         error_log("---> DAO Query : " . $filter_query);
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
-            $fornecedores[] = new Fornecedor($id,$nome,$descricao,$telefone, $email, $endereco_id);
+            $fornecedores[] = new Fornecedor($id, $nome, $descricao, $telefone, $email, $endereco_id);
         }
-        
+
         return $fornecedores;
     }
 
+
     public function contaComNome($nome) {
-
         $quantos = 0;
+        $isNumero = is_numeric($nome);
 
-        $query = "SELECT COUNT(*) AS contagem FROM " . 
-                    $this->table_name .
-                    " WHERE UPPER(nome) LIKE ? ";
-     
-        $stmt = $this->conn->prepare( $query );
+        $query = "SELECT COUNT(*) AS contagem
+                FROM " . $this->table_name . "
+                WHERE (UPPER(nome) LIKE ?";
+
+        if ($isNumero) {
+            $query .= " OR id = ?";
+        }
+
+        $query .= ")";
+
+        $stmt = $this->conn->prepare($query);
+
         $stmt->bindValue(1, '%' . strtoupper($nome) . '%');
-        
+
+        if ($isNumero) {
+            $stmt->bindValue(2, (int)$nome, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
-        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
             $quantos = $contagem;
         }
-        
+
         return $quantos;
     }
 }

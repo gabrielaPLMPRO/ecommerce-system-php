@@ -1,20 +1,20 @@
 <?php
+
+include_once "../fachada.php";
 include "../includes/verifica.php";
-require_once '../controllers/LoginController.php';
-$controller = new LoginController();
 
-if (!isset($_GET['id'])) {
-    header('Location: usuario_listar.php?msg=erro');
-    exit;
+$id = @$_GET["id"];
+
+$dao = $factory->getUsuarioDao();
+
+$usuario = $dao->buscaPorId($id);
+
+// $endereco = $dao->buscaPorId($idEndereco);
+
+if($usuario==null) {
+    $usuario = new Usuario( null, null, null, null,null);
 }
 
-$usuario = $controller->consultar($_GET['id']);
-if (!$usuario) {
-    header('Location: usuario_listar.php?msg=erro');
-    exit;
-}
-
-$usuario = $usuario[0];
 ?>
 
 <?php include('../includes/header.php'); ?>
@@ -46,38 +46,49 @@ $usuario = $usuario[0];
 <div class="container">
     <div class="card-form">
         <h2>Editar Usuário</h2>
-        <form action="../controllers/LoginController.php" method="POST">
-            <input type="hidden" name="acao" value="alterar">
-            <input type="hidden" name="id" value="<?= $usuario['id'] ?>">
+        <form action="../controllers/UsuarioController.php" method="POST">
+            <input type="hidden" name="acao" value="salvar">
+            <input type="hidden" name="id" value="<?=$usuario->getId()?>">
 
             <div class="form-group">
                 <label for="nome">Nome</label>
-                <input type="text" class="form-control" id="nome" name="nome" value="<?= htmlspecialchars($usuario['nome']) ?>" required>
+                <input type="text" class="form-control" id="nome" name="nome" value="<?= htmlspecialchars($usuario->getNome() ?? '') ?>" required>
             </div>
-
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="text" class="form-control" id="email" name="email" value="<?= htmlspecialchars($usuario['email']) ?>" required>
+                <label for="descricao">Email</label>
+                <input type="text" class="form-control" id="email" name="email" 
+                    value="<?= htmlspecialchars($usuario->getEmail() ?? '') ?>" 
+                    <?= !empty($usuario->getId()) ? 'disabled' : 'required' ?>>
             </div>
 
             <div class="form-group">
                 <label for="senha">Senha</label>
-                <input type="password" class="form-control" id="tipo" name="tipo" value="<?= htmlspecialchars($usuario['senha']) ?>" required>
+                <input type="password" class="form-control" id="senha" name="senha" value="<?= htmlspecialchars($usuario->getSenha() ?? '') ?>" 
+                    <?= !empty($usuario->getId()) ? 'disabled' : 'required' ?>>
             </div>
 
             <div class="form-group">
-                <label for="tipo">Tipo de Usuário</label>
-                <select name="tipo" id="tipo" class="form-control">
-                    <option value="cliente" <?php echo ($usuario['tipo'] === 'cliente') ? 'selected' : ''; ?>>Cliente</option>
-                    <option value="admin" <?php echo ($usuario['tipo'] === 'admin') ? 'selected' : ''; ?>>Admin</option>
-                </select>
-            </div>
+            <label for="tipo">Tipo de Usuário</label>
+            <select name="tipo" id="tipo" class="form-control" <?= $usuario->getTipo() === 'admin' ? 'disabled' : '' ?>>
+                <option value="cliente" <?= $usuario->getTipo() === "cliente" ? "selected" : '' ?>>Cliente</option>
+                <option value="admin" <?= $usuario->getTipo() === "admin" ? "selected" : '' ?>>Admin</option>
+            </select>
 
+            <?php if ($usuario->getTipo() === 'admin'): ?>
+                <!-- Campo hidden para garantir envio do valor -->
+                <input type="hidden" name="tipo" value="admin">
+            <?php endif; ?>
+        </div>
+
+
+            
+            
             <hr>
 
             <div class="text-center">
                 <button type="submit" class="btn btn-custom btn-lg btn-block">Salvar Alterações</button>
             </div>
+        
         </form>
     </div>
 </div>

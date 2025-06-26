@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS produtos (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     descricao TEXT NOT NULL,
-    foto VARCHAR(4000), -- guid
+    foto TEXT, -- guid
     fornecedor_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

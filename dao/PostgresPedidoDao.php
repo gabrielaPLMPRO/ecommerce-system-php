@@ -88,72 +88,101 @@ class PostgresPedidoDao extends PostgresDao {
         return $pedido;
     }
 
-    public function buscaComNomePaginado($numero,$inicio,$quantos, $idUsuarioLogado) { // tem que ter como pesquisar pelo nome do cliente e numero do pedido
+    public function buscaComNomePaginado($filtro, $inicio, $quantos, $idUsuarioLogado) {
         $pedidos = array();
+        $isNumero = is_numeric($filtro);
 
         $query = "SELECT
-                    id, cliente_id, usuario_id, status, numero, data_pedido, data_entrega, total
-                FROM
-                    " . $this->table_name ;
+                    p.id, p.cliente_id, p.usuario_id, p.status, p.numero, p.data_pedido, p.data_entrega, p.total
+                FROM " . $this->table_name . " p
+                JOIN clientes c ON c.id = p.cliente_id
+                WHERE (UPPER(c.nome) LIKE ?";
 
-        if($idUsuarioLogado){
-            $query =$query . " WHERE usuario_id = ?";
+        if ($isNumero) {
+            $query .= " OR p.numero = ?";
         }
 
-        $query= $query . 
-        " ORDER BY id ASC" .
-        " LIMIT ? OFFSET ?";
-     
-        $stmt = $this->conn->prepare( $query );
+        if ($idUsuarioLogado) {
+            $query .= ") AND p.usuario_id = ?";
+        } else {
+            $query .= ")";
+        }
 
-        if($idUsuarioLogado){
-            $stmt->bindValue(1, (int)$idUsuarioLogado, PDO::PARAM_INT);
-            $stmt->bindValue(2, $quantos);
-            $stmt->bindValue(3, $inicio);
+        $query .= " ORDER BY p.id ASC LIMIT ? OFFSET ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        // Bind dos parâmetros
+        $paramIndex = 1;
+        $stmt->bindValue($paramIndex++, '%' . strtoupper($filtro) . '%');
+
+        if ($isNumero) {
+            $stmt->bindValue($paramIndex++, $filtro, PDO::PARAM_STR); // `numero` pode ser string
         }
-        else{
-        $stmt->bindValue(1, $quantos);
-        $stmt->bindValue(2, $inicio);
+
+        if ($idUsuarioLogado) {
+            $stmt->bindValue($paramIndex++, (int)$idUsuarioLogado, PDO::PARAM_INT);
         }
-        
+
+        $stmt->bindValue($paramIndex++, $quantos, PDO::PARAM_INT);
+        $stmt->bindValue($paramIndex++, $inicio, PDO::PARAM_INT);
+
         $stmt->execute();
 
-        $filter_query = $query . "LIMIT " .$quantos. " OFFSET " . $inicio . '';
+        $filter_query = $query . " LIMIT " . $quantos . " OFFSET " . $inicio;
         error_log("---> DAO Query : " . $filter_query);
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
-            $pedidos[] = new Pedido($id,$cliente_id,$usuario_id,$status,$numero,$data_pedido,$data_entrega,$total);
+            $pedidos[] = new Pedido($id, $cliente_id, $usuario_id, $status, $numero, $data_pedido, $data_entrega, $total);
         }
-        
+
         return $pedidos;
     }
 
-    public function contaComNome($numero, $idUsuarioLogado) {
 
+    public function contaComNome($filtro, $idUsuarioLogado) {
         $quantos = 0;
+        $isNumero = is_numeric($filtro);
 
-        $query = "SELECT COUNT(*) AS contagem FROM " . 
-                    $this->table_name ;
+        $query = "SELECT COUNT(*) AS contagem
+                FROM " . $this->table_name . " p
+                JOIN clientes c ON c.id = p.cliente_id
+                WHERE (UPPER(c.nome) LIKE ?";
 
-        if($idUsuarioLogado){
-            $query =$query . " WHERE usuario_id = ?";
+        if ($isNumero) {
+            $query .= " OR p.numero = ?";
         }
-     
-        $stmt = $this->conn->prepare( $query );
 
-        if($idUsuarioLogado){
-            $stmt->bindValue(1, (int)$idUsuarioLogado, PDO::PARAM_INT);
+        if ($idUsuarioLogado) {
+            $query .= ") AND p.usuario_id = ?";
+        } else {
+            $query .= ")";
         }
-        
+
+        $stmt = $this->conn->prepare($query);
+
+        // Bind dos parâmetros
+        $paramIndex = 1;
+        $stmt->bindValue($paramIndex++, '%' . strtoupper($filtro) . '%');
+
+        if ($isNumero) {
+            $stmt->bindValue($paramIndex++, $filtro, PDO::PARAM_STR);
+        }
+
+        if ($idUsuarioLogado) {
+            $stmt->bindValue($paramIndex++, (int)$idUsuarioLogado, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
-        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
             $quantos = $contagem;
         }
-        
+
         return $quantos;
     }
+
 }
 ?>
