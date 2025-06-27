@@ -70,31 +70,34 @@ switch($_POST['acao']){
         $itens = $itensDao->buscaPorPedidoId($pedido_id);
         ?>
 
-        <!-- Carrossel com todas as fotos dos produtos do pedido -->
-       <div id="carouselPedido<?= $pedido_id ?>" class="carousel slide mb-4" data-ride="carousel">
-            <div class="carousel-inner">
-                <?php foreach ($itens as $index => $item): 
-                    $produto = $produtoDao->buscaPorId($item->getProdutoId());
-                ?>
-                <div class="carousel-item <?= ($index == 0) ? 'active' : '' ?>">
-                    <img src="data:image/png;base64,<?= $produto->getFoto(); ?>" class="d-block mx-auto" alt="Produto" style="max-height: 200px;">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5><?= $produto->getNome(); ?></h5>
+        <?php if (isset($_SESSION["tipo"]) && $_SESSION["tipo"] === "cliente"): ?>
+    <!-- Carrossel com todas as fotos dos produtos do pedido -->
+            <div id="carouselPedido<?= $pedido_id ?>" class="carousel slide mb-4" data-ride="carousel">
+                <div class="carousel-inner">
+                    <?php foreach ($itens as $index => $item): 
+                        $produto = $produtoDao->buscaPorId($item->getProdutoId());
+                    ?>
+                    <div class="carousel-item <?= ($index == 0) ? 'active' : '' ?>">
+                        <img src="data:image/png;base64,<?= $produto->getFoto(); ?>" class="d-block mx-auto" alt="Produto" style="max-height: 200px;">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5><?= $produto->getNome(); ?></h5>
+                        </div>
                     </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
-            </div>
 
-            <!-- Botões personalizados com fundo escuro e setas brancas -->
-            <a class="carousel-control-prev" href="#carouselPedido<?= $pedido_id ?>" role="button" data-slide="prev" style="background-color: rgba(0,0,0,0.5); width: 40px; height: 40px; top: 50%; transform: translateY(-50%); border-radius: 50%;">
-                <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1);"></span>
-                <span class="sr-only">Anterior</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselPedido<?= $pedido_id ?>" role="button" data-slide="next" style="background-color: rgba(0,0,0,0.5); width: 40px; height: 40px; top: 50%; transform: translateY(-50%); border-radius: 50%;">
-                <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(1);"></span>
-                <span class="sr-only">Próximo</span>
-            </a>
-        </div>
+                <!-- Botões personalizados com fundo escuro e setas brancas -->
+                <a class="carousel-control-prev" href="#carouselPedido<?= $pedido_id ?>" role="button" data-slide="prev" style="background-color: rgba(0,0,0,0.5); width: 40px; height: 40px; top: 50%; transform: translateY(-50%); border-radius: 50%;">
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1);"></span>
+                    <span class="sr-only">Anterior</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselPedido<?= $pedido_id ?>" role="button" data-slide="next" style="background-color: rgba(0,0,0,0.5); width: 40px; height: 40px; top: 50%; transform: translateY(-50%); border-radius: 50%;">
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(1);"></span>
+                    <span class="sr-only">Próximo</span>
+                </a>
+            </div>
+        <?php endif; ?>
+
 
 
         <!-- Tabela com detalhes dos itens -->

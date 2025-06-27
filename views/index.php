@@ -1,4 +1,7 @@
-<?php include('../includes/header.php'); ?>
+<?php 
+include('../includes/header.php'); 
+include "../includes/verifica_user_admin.php";
+?>
 
 
 <head>

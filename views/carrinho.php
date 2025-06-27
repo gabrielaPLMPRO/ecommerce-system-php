@@ -3,6 +3,7 @@
 <?php 
 include('../includes/header.php'); 
 include_once "../fachada.php";
+include "../includes/verifica_user_admin.php";
 
 $daoProduto =  $factory->getProdutoDao();
 $daoEstoque = $factory->getEstoqueDao();

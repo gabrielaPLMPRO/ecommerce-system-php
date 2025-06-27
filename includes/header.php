@@ -51,11 +51,20 @@ if (is_session_started() === FALSE) {
   <div class="header-container">
     <nav class="main-nav">
       <ul>
-        <li><a href="<?= BASE_URL ?>/views/index.php">Home</a></li>
+        <?php         
+         if(isset($_SESSION["nome_usuario"]) && $_SESSION["tipo"]==="admin" ) {
+            echo " <li><span><a href='" . BASE_URL . "/views/indexAdmin.php'>Painel de Controle</a></span></li>";
+         }
+         else{
+            echo " <li><span><a href='" . BASE_URL . "/views/index.php'>Home</a></span></li>";
+         }
+        ?>
         <?php
         if (isset($_SESSION["nome_usuario"])) {
-          echo "<li><span>Você está logado como " . $_SESSION["nome_usuario"];
-          echo " <a href='" . BASE_URL . "/views/executa_logout.php'>Logout</a></span></li>";
+          if($_SESSION["tipo"]==="cliente"){
+            echo " <li><span><a href='" . BASE_URL . "/views/pedidos_listar_paginado.php'>Meus pedidos</a></span></li>";
+          }
+          echo "<li><span><a href='" . BASE_URL . "/views/executa_logout.php'>Logout</a></span></li>";
         } else {
           echo "<li><span><a href='" . BASE_URL . "/views/login.php'>Efetuar Login</a></span></li>";
         }
