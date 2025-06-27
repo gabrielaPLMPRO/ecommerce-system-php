@@ -6,8 +6,10 @@ include "../includes/verifica.php";
 $id = @$_GET["id"];
 
 $dao = $factory->getUsuarioDao();
+$daoCliente = $factory->getClienteDao();
 
 $usuario = $dao->buscaPorId($id);
+$cliente = $daoCliente->buscarPorUsuarioId($id);
 
 // $endereco = $dao->buscaPorId($idEndereco);
 
@@ -69,12 +71,12 @@ if($usuario==null) {
 
             <div class="form-group">
             <label for="tipo">Tipo de Usuário</label>
-            <select name="tipo" id="tipo" class="form-control" <?= $usuario->getTipo() === 'admin' ? 'disabled' : '' ?>>
-                <option value="cliente" <?= $usuario->getTipo() === "cliente" ? "selected" : '' ?>>Cliente</option>
+            <select name="tipo" id="tipo" class="form-control" <?= ($usuario->getTipo() === 'admin' &&  $cliente==null)|| $cliente==null?  'disabled' : '' ?>>
                 <option value="admin" <?= $usuario->getTipo() === "admin" ? "selected" : '' ?>>Admin</option>
+                <option value="cliente" <?= $usuario->getTipo() === "cliente" ? "selected" : '' ?>>Cliente</option>
             </select>
 
-            <?php if ($usuario->getTipo() === 'admin'): ?>
+            <?php if (($usuario->getTipo() === 'admin' &&  $cliente==null)|| $cliente==null ): ?>
                 <!-- Campo hidden para garantir envio do valor -->
                 <input type="hidden" name="tipo" value="admin">
             <?php endif; ?>

@@ -28,13 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         header('Location: ../views/usuario_listar_paginado.php?msg=erro');
                     }
                 } else {
+                    $cliente= $daoCliente->buscarPorUsuarioId($usuario->getId());
                     $usuario->setNome($nome);
 
-                    if($usuario->getTipo()=="cliente"){
+                    if(($usuario->getTipo() === 'admin' &&  $cliente==null)|| $cliente==null){
                         $usuario->setTipo($tipo);
                     }
                     else{
-                        $usuario->setTipo('admin');
+                        $usuario->setTipo($tipo);
                     }
 
                     if ($dao->altera($usuario)) {
