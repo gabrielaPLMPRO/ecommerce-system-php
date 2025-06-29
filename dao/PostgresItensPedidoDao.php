@@ -81,5 +81,49 @@ class PostgresItensPedidoDao extends PostgresDao {
         
         return $itens;
     }
+    public function buscaPorPedidoIdApi($pedido_id) { // tem que ter como pesquisar pelo nome do cliente e numero do pedido
+        $itens = array();
+
+        $query = "SELECT
+                    p.nome, p.descricao, i.preco_unitario, i.subtotal
+                FROM
+                    " . $this->table_name . " i, produtos p ". 
+                    "  WHERE pedido_id = ? AND i.produto_id = p.id ORDER BY i.id ASC";
+     
+        $stmt = $this->conn->prepare( $query );
+        $stmt->bindValue(1, (int)$pedido_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+             $itens[] = [
+                'nome' => $nome,
+                'descricao' => $descricao,
+                'preco_unitario' => $preco_unitario,
+                'subtotal' => $subtotal
+            ];
+        }
+        
+        return $itens;
+    }
+   private function getDadosParaJSON($item){
+
+        $data = [
+            'nome' => $item['nome'],
+            'descricao' => $item['descricao'],
+            'preco_unitario' => $item['preco_unitario'],
+            'subtotal' => $item['subtotal']
+        ];
+        return $data;
+    }
+
+    public function buscaPorItensJSON($idPedido) {
+        $itens = $this->buscaPorPedidoIdApi($idPedido);
+        $itensJSON = array();
+        foreach ($itens as $item) {
+            $itensJSON[] =$this->getDadosParaJSON($item);
+        }
+        return $itensJSON;
+    }
 }
 ?>

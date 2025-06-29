@@ -183,6 +183,119 @@ class PostgresPedidoDao extends PostgresDao {
 
         return $quantos;
     }
+    private function buscaTodosApi() {
 
+        $pedidos = array();
+
+        $query = "SELECT
+                    p.id, p.numero, c.nome, p.status, p.data_pedido, p.data_entrega, p.total
+                FROM
+                    " . $this->table_name . " p, clientes c ".
+                    " where p.cliente_id=c.id". 
+                    " ORDER BY p.id";
+     
+        $stmt = $this->conn->prepare( $query );
+        $stmt->execute();
+
+        error_log("---> QUERY = " . $query);
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $pedidos[] = [
+                'numero' => $numero,
+                'nome' => $nome,
+                'status' => $status,
+                'data_pedido' => $data_pedido,
+                'data_entrega' => $data_entrega,
+                'total' => $total,
+                'id' => $id
+            ];
+        }
+        
+        return $pedidos;
+    }
+    private function getDadosParaJSON($pedido,$itensPedido){
+
+        $data = [
+            'numero' => $pedido['numero'],
+            'nome' => $pedido['nome'],
+            'status' => $pedido['status'],
+            'data_pedido' => $pedido['data_pedido'],
+            'data_entrega' => $pedido['data_entrega'],
+            'total' => $pedido['total'],
+            'itens' => $itensPedido
+        ];
+        return $data;
+    }
+
+    public function buscaPedidosJSON($daoItensPedido) {
+        $pedidos = $this->buscaTodosApi();
+        $pedidosJSON = array();
+        foreach ($pedidos as $pedido) {
+            $itensPedido= $daoItensPedido->buscaPorItensJSON($pedido['id']);
+            $pedidosJSON[] =$this->getDadosParaJSON($pedido,$itensPedido);
+        }
+        return stripslashes(json_encode($pedidosJSON,JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    }
+    private function buscaPedidosFiltradosApi($numero = null, $nome = null) {
+        $pedidos = array();
+
+        $query = "SELECT
+                    p.id, p.numero, c.nome, p.status, p.data_pedido, p.data_entrega, p.total
+                FROM
+                    " . $this->table_name . " p, clientes c
+                WHERE
+                    p.cliente_id = c.id";
+
+        // Monta dinamicamente os filtros
+        if (!empty($numero)) {
+            $query .= " AND p.numero = :numero";
+        }
+
+        if (!empty($nome)) {
+            $query .= " AND c.nome ILIKE :nome"; // ILIKE para busca case-insensitive (Postgres)
+        }
+
+        $query .= " ORDER BY p.id";
+
+        $stmt = $this->conn->prepare($query);
+
+        // Atribui os valores dos parâmetros
+        if (!empty($numero)) {
+            $stmt->bindValue(':numero', $numero, PDO::PARAM_INT);
+        }
+
+        if (!empty($nome)) {
+            $stmt->bindValue(':nome', "%$nome%", PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+
+        error_log("---> QUERY = " . $query);
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            extract($row);
+            $pedidos[] = [
+                'numero' => $numero,
+                'nome' => $nome,
+                'status' => $status,
+                'data_pedido' => $data_pedido,
+                'data_entrega' => $data_entrega,
+                'total' => $total,
+                'id' => $id
+            ];
+        }
+
+        return $pedidos;
+    }
+    public function buscaPedidosFiltradosJSON($daoItensPedido, $numero = null, $nome = null) {
+        $pedidos = $this->buscaPedidosFiltradosApi($numero, $nome);
+        $pedidosJSON = array();
+        foreach ($pedidos as $pedido) {
+            $itensPedido= $daoItensPedido->buscaPorItensJSON($pedido['id']);
+            $pedidosJSON[] =$this->getDadosParaJSON($pedido,$itensPedido);
+        }
+        return stripslashes(json_encode($pedidosJSON,JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    }
 }
 ?>
