@@ -20,7 +20,41 @@ if($produto==null) {
 ?>
 
 <?php include('../includes/header.php'); ?>
+<style>
+.upload-label {
+    display: inline-block;
+    background-color: #0d6efd; /* cor primária do Bootstrap 5 */
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+    user-select: none;
+    border: 1px solid transparent;
+}
+.upload-label:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
 
+#upload-status {
+    margin-top: 6px;
+    color: #6c757d; /* cinza do Bootstrap */
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.preview-img {
+    display: block; /* já exibe quando tiver src */
+    margin-top: 12px;
+    max-width: 200px;
+    border-radius: 6px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.12);
+    border: 1px solid #dee2e6; /* cinza claro */
+}
+</style>
 <div class="container mt-4">
     <?php if (isset($_GET['msg'])): ?>
         <?php
@@ -89,6 +123,19 @@ if(empty($produto->getId()))
             </div>';
 }
 ?>
+<?php
+// Suponha que $fotoBase64 contém a imagem salva, sem prefixo:
+$fotoBase64 = $produto->getFoto() ?? '';
+// Ajuste o tipo mime se for PNG ou outro, conforme sua imagem.
+?>
+           <div class="form-group">
+                <label class="upload-label" for="upload">Selecionar imagem</label>
+                <input type="file" id="upload" accept="image/*" hidden>
+                <input type="hidden" name="foto" id="foto" value="<?= htmlspecialchars($fotoBase64) ?>">
+                <p id="upload-status"><?= $fotoBase64 ? 'Imagem carregada' : 'Nenhuma imagem selecionada' ?></p>
+                <img id="preview" src="<?= $fotoBase64 ? 'data:image/jpeg;base64,' . $fotoBase64 : '' ?>" alt="Preview" class="preview-img" style="<?= $fotoBase64 ? '' : 'display:none' ?>">
+            </div>
+
             <hr>
 
             <div class="text-center">
@@ -98,5 +145,31 @@ if(empty($produto->getId()))
         </form>
     </div>
 </div>
+<script>
+document.getElementById('upload').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    const status = document.getElementById('upload-status');
+    const preview = document.getElementById('preview');
+    const hiddenInput = document.getElementById('foto');
+
+    if (!file) {
+        status.textContent = "Nenhuma imagem selecionada";
+        preview.style.display = 'none';
+        hiddenInput.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const base64 = e.target.result;
+        hiddenInput.value = base64.split(',')[1];
+
+        preview.src = base64;
+        preview.style.display = 'block';
+        status.textContent = `Imagem selecionada: ${file.name}`;
+    };
+    reader.readAsDataURL(file);
+});
+</script>
 
 <?php include('../includes/footer.php'); ?>

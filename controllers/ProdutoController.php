@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $descricao = @$_POST["descricao"];
                 $foto = @$_POST["foto"];
                 $fornecedor_id = @$_POST["fornecedor_id"];
+                $foto= @$_POST["foto"];
 
                 $preco = @$_POST["preco"]; 
                 $qtdEstoque = @$_POST["quantidade"]; 

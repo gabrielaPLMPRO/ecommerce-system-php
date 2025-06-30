@@ -52,7 +52,7 @@ class PostgresProdutoDao extends PostgresDao {
     public function altera($produto) {
 
         $query = "UPDATE " . $this->table_name . 
-        " SET nome = :nome, descricao = :descricao, , foto = :foto, fornecedor_id = :fornecedor_id" .
+        " SET nome = :nome, descricao = :descricao,  foto = :foto, fornecedor_id = :fornecedor_id" .
         " WHERE id = :id";
 
         $stmt = $this->conn->prepare($query);
