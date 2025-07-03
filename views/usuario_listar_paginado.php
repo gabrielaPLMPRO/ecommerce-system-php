@@ -18,7 +18,6 @@ include "../includes/verifica.php";
       <h3 align="center">Usuários</h3>
       <br />
       <div class="card">
-        <div class="card-header">Informações</div>
         <div class="card-body">
           <div class="form-group">
             <input type="text" name="search_box" id="search_box" class="form-control" placeholder="Nome do Usuário" />
@@ -28,7 +27,6 @@ include "../includes/verifica.php";
             </a>
           <div class="table-responsive" id="dynamic_content">
             
-          </div>
         </div>
       </div>
     </div>

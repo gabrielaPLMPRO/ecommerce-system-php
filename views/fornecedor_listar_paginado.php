@@ -15,10 +15,9 @@ include "../includes/verifica.php";
   <body>
     <br />
     <div class="container">
-      <h3 align="center">Pesquisa com Paginação em PHP PostgreSQL (DAO Pattern) usando AJAX com JQuery </h3>
+      <h3 align="center">Fornecedores</h3>
       <br />
       <div class="card">
-        <div class="card-header">Dados dinâmicos</div>
         <div class="card-body">
           <div class="form-group">
             <input type="text" name="search_box" id="search_box" class="form-control" placeholder="Digite aqui letras do nome para pesquisar" />
@@ -28,7 +27,6 @@ include "../includes/verifica.php";
             </a>
           <div class="table-responsive" id="dynamic_content">
             
-          </div>
         </div>
       </div>
     </div>

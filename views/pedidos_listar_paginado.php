@@ -19,11 +19,9 @@ include "../includes/verifica_user.php";
     <h3 class="text-center">Consulta de Pedidos</h3>
 
     <div class="card">
-      <div class="card-header">Buscar Pedidos</div>
       <div class="card-body">
         <input type="text" id="search_box" class="form-control" placeholder="Buscar por número do pedido ou nome do cliente">
         <div id="dynamic_content" class="mt-3"></div>
-      </div>
     </div>
   </div>
 </body>
