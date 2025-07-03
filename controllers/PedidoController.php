@@ -179,8 +179,8 @@ switch($_POST['acao']){
             $clienteId=$cliente->getId();
 
             $numeroPedido = time(); 
+            date_default_timezone_set('America/Sao_Paulo');
             $dataPedido = date('Y-m-d H:i:s');
-            $dataEntrega= date('Y-m-d H:i:s', strtotime('+7 days'));
             $status = 'pendente';
             
             $totalGeral = 0;
@@ -198,7 +198,7 @@ switch($_POST['acao']){
             }
 
             // Monta o objeto Pedido
-            $pedido = new Pedido(0, $clienteId, $usuarioId, $status, $numeroPedido, $dataPedido, $dataEntrega, $totalGeral);
+            $pedido = new Pedido(0, $clienteId, $usuarioId, $status, $numeroPedido, $dataPedido, null, $totalGeral);
             $pedidoId = $pedidoDao->insere($pedido);
 
             if(!$pedidoId){
