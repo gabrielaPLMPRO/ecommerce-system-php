@@ -2,11 +2,3 @@ RewriteEngine On
 
 
 RewriteRule ^pedidoApi/?$ pedidoApi.php [NC,L]
-
-RewriteRule ^pedidoApi/numero/([0-9]+)/?$ pedidoApi.php?numero=$1 [NC,L]
-
-RewriteRule ^pedidoApi/nome/([^/]+)/?$ pedidoApi.php?nome=$1 [NC,L]
-
-RewriteRule ^pedidoApi/numero/([0-9]+)/nome/([^/]+)/?$ pedidoApi.php?numero=$1&nome=$2 [NC,L]
-
-RewriteRule ^pedidoApi/nome/([^/]+)/numero/([0-9]+)/?$ pedidoApi.php?nome=$1&numero=$2 [NC,L]

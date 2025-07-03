@@ -7,13 +7,26 @@ $dao = $factory->getPedidoDao();
 $daoItensPedido = $factory->getItensPedidoDao();
 
 $request_method=$_SERVER["REQUEST_METHOD"];
+
+if (
+    $request_method === 'POST' &&
+    isset($_SERVER['CONTENT_TYPE']) &&
+    stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== false
+) {
+    $json = file_get_contents('php://input');
+    $dados = json_decode($json, true);
+
+    if (json_last_error() === JSON_ERROR_NONE && is_array($dados)) {
+        $_POST = array_merge($_POST, $dados);
+    }
+}
 	
 switch($request_method){
-   case 'GET':
-      if (!empty($_GET["numero"]) || !empty($_GET["nome"])) 
+   case 'POST':
+      if (!empty($_POST["numero"]) || !empty($_POST["nome"])) 
       {
-         $numero = isset($_GET["numero"]) ? intval($_GET["numero"]) : null;
-         $nome = isset($_GET["nome"]) ? $_GET["nome"] : null;
+         $numero = isset($_POST["numero"]) ? intval($_POST["numero"]) : null;
+         $nome = isset($_POST["nome"]) ? $_POST["nome"] : null;
 
          $pedidoJSON = $dao->buscaPedidosFiltradosJSON( $daoItensPedido, $numero, $nome);
 
@@ -31,12 +44,8 @@ switch($request_method){
       }
       break;
    case 'OPTIONS':
-      if(!empty($_GET["id"]))
-      {
-         $id=intval($_GET["id"]);
-         $dao->remove($id);
-         http_response_code(204); // 204 Deleted
-      }
+      echo stripslashes(json_encode('POST',JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+      http_response_code(200);
       break;
    default:
       // Invalid Request Method
