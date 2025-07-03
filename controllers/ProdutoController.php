@@ -357,6 +357,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo json_encode(['status' => 'ok']);
 
                 break;
+            case 'SubtrairCarrinho':
+                session_start();
+                $produtoId = $_POST['produto_id'];
+                if (isset($_SESSION['carrinho'])) {
+                    foreach ($_SESSION['carrinho'] as $index => $item) {
+                        if ($item['produto_id'] == $produtoId) {
+                            if ($item['quantidade'] > 1) {
+                                $_SESSION['carrinho'][$index]['quantidade']--;
+                            } else {
+                                unset($_SESSION['carrinho'][$index]);
+                            }
+                            break;
+                        }
+                    }
+                }
+                echo json_encode(["status" => "ok"]);
+                break; 
             case 'AdicionarMaisCarrinho':
                 session_start();
                 $produtoId = intval($_POST['produto_id']);

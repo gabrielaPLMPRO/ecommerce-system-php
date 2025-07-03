@@ -52,7 +52,6 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
         <h3 align="center">Meu Carrinho</h3>
         <br />
         <div class="card">
-            <div class="card-header">Itens do Carrinho</div>
             <div class="card-body">
                 <div class="row">
                     <?php
@@ -73,14 +72,12 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
                                         <h5><?= $produto->getNome(); ?></h5>
                                         <p><?= substr($produto->getDescricao(), 0, 60); ?>...</p>
                                         <p><strong>Preço:</strong> R$ <?= number_format($estoque->getPreco(), 2, ',', '.'); ?></p>
-                                        <p><strong>Qtd:</strong> <?= $item['quantidade']; ?></p>
                                         <p><strong>Subtotal:</strong> R$ <?= number_format($subtotal, 2, ',', '.'); ?></p>
-                                        <button class="btn btn-success btn-sm adicionar-item" data-id="<?= $produto->getId(); ?>">
-                                            <i class="fas fa-plus"></i> Adicionar Mais
-                                        </button>
-                                        <button class="btn-aliexpress remover-item" data-id="<?= $produto->getId(); ?>">
-                                            <i class="fas fa-trash"></i> Remover
-                                        </button>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <button class="btn btn-sm btn-outline-danger btn-decrement" data-id="<?= $produto->getId(); ?>">−</button>
+                                            <span class="mx-2 quantidade-item" id="qtd-<?= $produto->getId(); ?>"><?= $item['quantidade']; ?></span>
+                                            <button class="btn btn-sm btn-outline-success btn-increment" data-id="<?= $produto->getId(); ?>">+</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <?php
@@ -97,7 +94,6 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
                     }
                     ?>
                 </div>
-            </div>
         </div>
     </div>
 
@@ -143,28 +139,7 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
                 });
             });
 
-            $('.remover-item').click(function(){
-                var produtoId = $(this).data('id');
-
-                $.ajax({
-                    url: '../controllers/ProdutoController.php',
-                    method: 'POST',
-                    data: { acao: 'RemoverDoCarrinho', produto_id: produtoId },
-                    success: function(response){
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Removido!',
-                            text: 'O produto foi removido do carrinho.',
-                            timer: 1200,
-                            showConfirmButton: false
-                        }).then(() => {
-                            location.reload();
-                        });
-                    }
-                });
-            });
-
-            $('.adicionar-item').click(function(){
+          $('.btn-increment').click(function(){
                 var produtoId = $(this).data('id');
 
                 $.ajax({
@@ -174,7 +149,7 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
                     success: function(response){
                         try {
                             var res = JSON.parse(response);
-                            if(res.status == 'ok'){
+                            if(res.status === 'ok'){
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Adicionado!',
@@ -184,8 +159,7 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
                                 }).then(() => {
                                     location.reload();
                                 });    
-                            }
-                            else{
+                            } else {
                                 Swal.fire('Erro', res.mensagem, 'error');
                             }
                         } catch(e) {
@@ -195,6 +169,46 @@ $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
                     }
                 });
             });
+
+
+            $('.btn-decrement').click(function(){
+                var produtoId = $(this).data('id');
+                var quantidadeAtual = parseInt($('#qtd-' + produtoId).text());
+
+                var acao = (quantidadeAtual <= 1) ? 'RemoverDoCarrinho' : 'SubtrairCarrinho';
+
+                $.ajax({
+                    url: '../controllers/ProdutoController.php',
+                    method: 'POST',
+                    data: { acao: acao, produto_id: produtoId },
+                    success: function(response){
+                        try {
+                            var res = JSON.parse(response);
+                            if (res.status === 'ok') {
+                                let msg = (acao === 'RemoverDoCarrinho') 
+                                    ? 'Produto removido do carrinho.' 
+                                    : 'Uma unidade foi removida do carrinho.';
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Atualizado!',
+                                    text: msg,
+                                    timer: 1200,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Erro', res.mensagem || 'Ocorreu um erro.', 'error');
+                            }
+                        } catch (e) {
+                            console.error('Erro ao parsear JSON:', e, response);
+                            Swal.fire('Erro', 'Erro inesperado ao processar a resposta.', 'error');
+                        }
+                    }
+                });
+            });
+
         });
     </script>
 
