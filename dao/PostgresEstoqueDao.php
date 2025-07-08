@@ -14,8 +14,6 @@ class PostgresEstoqueDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind values 
-
         $preco = $estoque->getPreco();
         $qtdEstoque = $estoque->getEstoque();
         $produto_id = $estoque->getProdutoId();
@@ -38,10 +36,8 @@ class PostgresEstoqueDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind parameters
         $stmt->bindValue(':produto_id', (int)$id, PDO::PARAM_INT);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    
@@ -64,7 +60,6 @@ class PostgresEstoqueDao extends PostgresDao {
         $stmt->bindParam(":estoque", $qtdEstoque);
         $stmt->bindParam(":id", $id);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    
@@ -205,7 +200,6 @@ class PostgresEstoqueDao extends PostgresDao {
         $stmt->bindParam(":estoque", $qtd);
         $stmt->bindParam(":produto_id", $produtoId);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    

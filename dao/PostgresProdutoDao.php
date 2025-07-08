@@ -14,7 +14,6 @@ class PostgresProdutoDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind values 
 
         $nome = $produto->getNome();
         $descricao = $produto->getDescricao();
@@ -27,7 +26,7 @@ class PostgresProdutoDao extends PostgresDao {
         $stmt->bindParam(":fornecedor_id", $fornecedor_id);
       
         if($stmt->execute()){
-            return $this->conn->lastInsertId();  // retorna o ID inserido
+            return $this->conn->lastInsertId();  
         } else {
             return false;
         }
@@ -39,10 +38,8 @@ class PostgresProdutoDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind parameters
         $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    
@@ -69,7 +66,6 @@ class PostgresProdutoDao extends PostgresDao {
         $stmt->bindParam(":fornecedor_id", $fornecedor_id);
         $stmt->bindParam(":id", $id);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    
@@ -119,7 +115,6 @@ class PostgresProdutoDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // Bind dos parâmetros
         $stmt->bindValue(1, '%' . strtoupper($nome) . '%');
 
         if ($isNumero) {

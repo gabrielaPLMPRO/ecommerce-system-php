@@ -11,7 +11,6 @@ $daoCliente = $factory->getClienteDao();
 $usuario = $dao->buscaPorId($id);
 $cliente = $daoCliente->buscarPorUsuarioId($id);
 
-// $endereco = $dao->buscaPorId($idEndereco);
 
 if($usuario==null) {
     $usuario = new Usuario( null, null, null, null,null);

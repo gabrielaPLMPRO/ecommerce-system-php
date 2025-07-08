@@ -47,13 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 break;
             case 'inserir':
 
-                //informacoes de usuario/cliente
                 $id = 0;
                 $nome = @$_POST["nome"];
                 $email = @$_POST["email"];
                 $senha = @$_POST["senha"];
 
-                // informacoes de endereco
                 $rua = @$_POST["rua"]; 
                 $numero = @$_POST["numero"]; 
                 $complemento = @$_POST["complemento"]; 
@@ -62,7 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $estado = @$_POST["estado"]; 
                 $cep = @$_POST["cep"]; 
 
-                //informacoes de cliente
                 $telefone = @$_POST["telefone"]; 
                 $cartao_credito = @$_POST["cartao_credito"]; 
 
@@ -119,9 +116,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 if($autenticou){
-                    
-                    //adicionado pois ja pode ter uma session com as informacoes do carrinho
-
                     session_start();
 
                     $_SESSION["id_usuario"]= $usuario->getId(); 

@@ -14,7 +14,6 @@ class PostgresEnderecoDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind values 
 
         $rua = $endereco->getRua();
         $numero = $endereco->getNumero();
@@ -33,7 +32,7 @@ class PostgresEnderecoDao extends PostgresDao {
         $stmt->bindParam(":estado", $estado);
 
         if($stmt->execute()){
-            return $this->conn->lastInsertId();  // retorna o ID inserido
+            return $this->conn->lastInsertId();  
         } else {
             return false;
         }
@@ -45,10 +44,8 @@ class PostgresEnderecoDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind parameters
         $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    
@@ -81,7 +78,6 @@ class PostgresEnderecoDao extends PostgresDao {
         $stmt->bindParam(":estado", $estado);
         $stmt->bindParam(":id", $id);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    

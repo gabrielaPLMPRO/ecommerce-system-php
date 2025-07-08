@@ -95,7 +95,6 @@ $(document).ready(function(){
     load_data(page, query);
   });
 
-  // Quando o status for alterado, abre o modal
   $(document).on('change', '.status-select', function() {
     var pedidoId = $(this).data('id');
     var status = $(this).val();
@@ -120,7 +119,6 @@ $(document).ready(function(){
     $('#statusModal').modal('show');
   });
 
-  // Confirmação do modal
   $('#confirmStatusChange').click(function () {
     var pedidoId = $('#modalPedidoId').val();
     var status = $('#modalStatus').val();

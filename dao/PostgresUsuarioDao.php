@@ -14,7 +14,6 @@ class PostgresUsuarioDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind values 
 
         $nome = $usuario->getNome();
         $email = $usuario->getEmail();
@@ -27,7 +26,7 @@ class PostgresUsuarioDao extends PostgresDao {
         $stmt->bindParam(":tipo", $tipo);
       
         if($stmt->execute()){
-            return $this->conn->lastInsertId();  // retorna o ID inserido
+            return $this->conn->lastInsertId(); 
         } else {
             return false;
         }
@@ -49,7 +48,6 @@ class PostgresUsuarioDao extends PostgresDao {
         $stmt->bindParam(":tipo", $tipo);
         $stmt->bindParam(":id", $id);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    
@@ -87,10 +85,8 @@ class PostgresUsuarioDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind parameters
         $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    
@@ -125,7 +121,7 @@ class PostgresUsuarioDao extends PostgresDao {
    public function buscaComNomePaginado($nome, $inicio, $quantos) {
         $usuarios = array();
 
-        $isNumero = is_numeric($nome); // Verifica se é um número (para buscar por ID)
+        $isNumero = is_numeric($nome); 
 
         $query = "SELECT id, nome, email, senha, tipo
                 FROM " . $this->table_name . "
@@ -139,7 +135,6 @@ class PostgresUsuarioDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // Define os parâmetros
         $stmt->bindValue(1, '%' . strtoupper($nome) . '%');
 
         if ($isNumero) {
@@ -163,7 +158,7 @@ class PostgresUsuarioDao extends PostgresDao {
 
     public function contaComNome($nome) {
         $quantos = 0;
-        $isNumero = is_numeric($nome); // Verifica se é possível buscar por ID
+        $isNumero = is_numeric($nome);
 
         $query = "SELECT COUNT(*) AS contagem FROM " . $this->table_name .
                 " WHERE UPPER(nome) LIKE ?";
@@ -174,7 +169,6 @@ class PostgresUsuarioDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // Define os parâmetros
         $stmt->bindValue(1, '%' . strtoupper($nome) . '%');
 
         if ($isNumero) {

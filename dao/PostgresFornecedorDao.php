@@ -14,7 +14,6 @@ class PostgresFornecedorDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind values 
 
         $nome = $fornecedor->getNome();
         $descricao = $fornecedor->getDescricao();
@@ -42,10 +41,8 @@ class PostgresFornecedorDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind parameters
         $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    
@@ -72,7 +69,6 @@ class PostgresFornecedorDao extends PostgresDao {
         $stmt->bindParam(":email", $email);
         $stmt->bindParam(":id", $id);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    
@@ -144,7 +140,6 @@ class PostgresFornecedorDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // Bind dos parâmetros
         $stmt->bindValue(1, '%' . strtoupper($nome) . '%');
 
         if ($isNumero) {

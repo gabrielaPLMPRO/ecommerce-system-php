@@ -14,8 +14,6 @@ class PostgresClienteDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind values 
-
         $nome = $cliente->getNome();
         $telefone = $cliente->getTelefone();
         $email = $cliente->getEmail();
@@ -31,13 +29,12 @@ class PostgresClienteDao extends PostgresDao {
         $stmt->bindParam(":usuario_id", $usuario_id);
       
         if($stmt->execute()){
-            return $this->conn->lastInsertId();  // retorna o ID inserido
+            return $this->conn->lastInsertId();  
         } else {
             return false;
         }
     }
 
-    // public function __construct($id, $nome, $telefone, $email, $cartao_credito, $endereco_id, $usuario_id) {
 
     public function removePorId($id) {
         $query = "DELETE FROM " . $this->table_name . 
@@ -45,10 +42,8 @@ class PostgresClienteDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind parameters
         $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    
@@ -75,7 +70,6 @@ class PostgresClienteDao extends PostgresDao {
         $stmt->bindParam(":cartao_credito", $cartao_credito);
         $stmt->bindParam(":id", $id);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    

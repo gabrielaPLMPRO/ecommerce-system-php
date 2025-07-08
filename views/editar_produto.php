@@ -11,7 +11,6 @@ $daoFornecedor = $factory->getFornecedorDao();
 $produto = $dao->buscaPorId($id);
 $listaFornecedores= $daoFornecedor->buscarTudo();
 
-// $endereco = $dao->buscaPorId($idEndereco);
 
 if($produto==null) {
     $produto = new Produto( null, null, null, null,null);
@@ -124,9 +123,7 @@ if(empty($produto->getId()))
 }
 ?>
 <?php
-// Suponha que $fotoBase64 contém a imagem salva, sem prefixo:
 $fotoBase64 = $produto->getFoto() ?? '';
-// Ajuste o tipo mime se for PNG ou outro, conforme sua imagem.
 ?>
            <div class="form-group">
                 <label class="upload-label" for="upload">Selecionar imagem</label>

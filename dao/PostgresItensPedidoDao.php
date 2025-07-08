@@ -14,7 +14,6 @@ class PostgresItensPedidoDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind values 
 
         $pedido_id = $pedido->getPedidoId();
         $produto_id = $pedido->getProdutoId();
@@ -29,7 +28,7 @@ class PostgresItensPedidoDao extends PostgresDao {
         $stmt->bindParam(":subtotal", $subtotal);
       
         if($stmt->execute()){
-            return $this->conn->lastInsertId();  // retorna o ID inserido
+            return $this->conn->lastInsertId();  
         } else {
             return false;
         }
@@ -60,7 +59,7 @@ class PostgresItensPedidoDao extends PostgresDao {
         return $itemPedido;
     }
 
-    public function buscaPorPedidoId($pedido_id) { // tem que ter como pesquisar pelo nome do cliente e numero do pedido
+    public function buscaPorPedidoId($pedido_id) { 
         $itens = array();
 
         $query = "SELECT
@@ -81,7 +80,7 @@ class PostgresItensPedidoDao extends PostgresDao {
         
         return $itens;
     }
-    public function buscaPorPedidoIdApi($pedido_id) { // tem que ter como pesquisar pelo nome do cliente e numero do pedido
+    public function buscaPorPedidoIdApi($pedido_id) { 
         $itens = array();
 
         $query = "SELECT

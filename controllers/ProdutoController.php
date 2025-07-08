@@ -256,7 +256,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $produtosPorPagina = 6;
                 $inicio = ($page - 1) * $produtosPorPagina;
 
-                // Simulação de dados (substitua pelo seu banco)
                 $nome = $_POST['query'];
                             
                 $limit = '5';
@@ -280,10 +279,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $semEstoque = ($estoqueProduto->getEstoque() == 0);
 
-                    // Classe para imagem cinza
                     $classeImagem = $semEstoque ? 'imagem-cinza' : '';
 
-                    // Configuração do botão
                     $disabled = $semEstoque ? 'disabled' : '';
                     $classeBotao = $semEstoque ? 'btn-indisponivel' : 'btn-aliexpress';
                     $textoBotao = $semEstoque ? 'Indisponível' : 'Adicionar ao Carrinho';
@@ -300,7 +297,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     echo '</div>';
                 }
 
-                // Paginação
                 $totalPaginas = ceil(count($todosProdutos) / $produtosPorPagina);
                 if ($totalPaginas > 1) {
                     echo '<div class="col-12"><nav><ul class="pagination justify-content-center">';
@@ -377,14 +373,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'AdicionarMaisCarrinho':
                 session_start();
                 $produtoId = intval($_POST['produto_id']);
-                // $encontrado = false;
                 $erro=false;
 
                 foreach ($_SESSION['carrinho'] as &$item) {
                     if ($item['produto_id'] == $produtoId) {
                         $quantidadeNoCarrinho=$item['quantidade']+1;
                         
-                        //validar se tem essa qtd no estoque
                         $estoqueDoItem=$daoEstoque->buscaPorProdutoId($produtoId);
 
                         $qtdEmEstoque=$estoqueDoItem->getEstoque();
@@ -396,18 +390,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                         
                         $item['quantidade'] += 1;
-                        // $encontrado = true;
                         break;
                     }
                 }
                 unset($item); 
-
-                // if (!$encontrado) {
-                //     $_SESSION['carrinho'][] = [
-                //         'produto_id' => $produtoId,
-                //         'quantidade' => 1
-                //     ];
-                // }
 
                 if(!$erro){
                     echo json_encode(['status' => 'ok']);

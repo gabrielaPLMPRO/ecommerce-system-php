@@ -22,7 +22,7 @@ switch($_POST['acao']){
 
 
         foreach ($pedidos as $pedido) {
-            $cliente = $clienteDao->buscaPorId($pedido->getClienteId()); // Assumindo que você tenha esse método
+            $cliente = $clienteDao->buscaPorId($pedido->getClienteId()); 
             ?>
             <div class="card mb-3">
                 <div class="card-header d-flex justify-content-between">
@@ -55,7 +55,6 @@ switch($_POST['acao']){
             <?php
         }
 
-        // Paginação
         $paginas = ceil($total / $limite);
         echo '<nav><ul class="pagination">';
         for ($i = 1; $i <= $paginas; $i++) {
@@ -147,7 +146,7 @@ switch($_POST['acao']){
         if ($status == "enviado" && $data_envio) {
             $pedido->setDataEntrega($data_envio);
         } elseif ($status == "cancelado" && $data_cancelamento) {
-            $pedido->setDataEntrega($data_cancelamento); // ou outro campo de cancelamento se tiver
+            $pedido->setDataEntrega($data_cancelamento); 
         }
         else{
             $pedido->setDataEntrega(null);
@@ -185,7 +184,6 @@ switch($_POST['acao']){
             
             $totalGeral = 0;
 
-            // Calcula o total do pedido
             foreach($carrinho as $item){
                 $estoque = $estoqueDao->buscaPorProdutoId($item['produto_id']);
                 $produto=$produtoDao->buscaPorId($item['produto_id']);
@@ -197,7 +195,6 @@ switch($_POST['acao']){
                 }
             }
 
-            // Monta o objeto Pedido
             $pedido = new Pedido(0, $clienteId, $usuarioId, $status, $numeroPedido, $dataPedido, null, $totalGeral);
             $pedidoId = $pedidoDao->insere($pedido);
 
@@ -215,12 +212,10 @@ switch($_POST['acao']){
                     $itemPedido = new ItemPedido(null, $pedidoId, $item['produto_id'], $quantidade, $precoUnitario, $subtotal);
                     $itensDao->insere($itemPedido);
 
-                    //subtrai itens do estoque
                     $estoqueDao->alterEstoque($item['produto_id'], $estoque->getEstoque()-$quantidade);
                 }
             }
 
-            // Limpar o carrinho
             $_SESSION['carrinho'] = [];
 
             echo json_encode(['status' => 'ok', 'numero' => $numeroPedido]);

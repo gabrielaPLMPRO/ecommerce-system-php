@@ -11,7 +11,6 @@ include_once('PostgresUsuarioDao.php');
 
 class PostgresDaofactory {
 
-    // specify your own database credentials
     private $username = "postgres";
     private $password = "ucs";
     public $conn;

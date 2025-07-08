@@ -32,15 +32,15 @@ switch($request_method){
 
          if($pedidoJSON!=null) {
             echo $pedidoJSON;
-            http_response_code(200); // 200 OK
+            http_response_code(200); 
          } else {
-               http_response_code(404); // 404 Not Found
+               http_response_code(404);
          }
       }
       else
       {
          echo $dao->buscaPedidosJSON($daoItensPedido);
-         http_response_code(200); // 200 OK
+         http_response_code(200); 
       }
       break;
    case 'OPTIONS':
@@ -48,8 +48,7 @@ switch($request_method){
       http_response_code(200);
       break;
    default:
-      // Invalid Request Method
-      http_response_code(405); // 405 Method Not Allowed
+      http_response_code(405);
       break;
 }
  

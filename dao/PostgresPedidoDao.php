@@ -14,7 +14,6 @@ class PostgresPedidoDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // bind values 
 
         $cliente_id = $pedido->getClienteId();
         $usuario_id = $pedido->getUsuarioId();
@@ -33,7 +32,7 @@ class PostgresPedidoDao extends PostgresDao {
         $stmt->bindParam(":total", $total);
       
         if($stmt->execute()){
-            return $this->conn->lastInsertId();  // retorna o ID inserido
+            return $this->conn->lastInsertId();  
         } else {
             return false;
         }
@@ -42,7 +41,7 @@ class PostgresPedidoDao extends PostgresDao {
     public function altera($pedido) {
 
         $query = "UPDATE " . $this->table_name . 
-        " SET status = :status, data_entrega = :data_entrega" . //coloquei propositalmente só esses campos pois na regra de negócio não se pode alterar as outras informações
+        " SET status = :status, data_entrega = :data_entrega" . 
         " WHERE id = :id";
 
         $stmt = $this->conn->prepare($query);
@@ -55,7 +54,6 @@ class PostgresPedidoDao extends PostgresDao {
         $stmt->bindParam(":data_entrega", $data_entrega);
         $stmt->bindParam(":id", $id);
 
-        // execute the query
         if($stmt->execute()){
             return true;
         }    
@@ -112,12 +110,11 @@ class PostgresPedidoDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // Bind dos parâmetros
         $paramIndex = 1;
         $stmt->bindValue($paramIndex++, '%' . strtoupper($filtro) . '%');
 
         if ($isNumero) {
-            $stmt->bindValue($paramIndex++, $filtro, PDO::PARAM_STR); // `numero` pode ser string
+            $stmt->bindValue($paramIndex++, $filtro, PDO::PARAM_STR); 
         }
 
         if ($idUsuarioLogado) {
@@ -162,7 +159,6 @@ class PostgresPedidoDao extends PostgresDao {
 
         $stmt = $this->conn->prepare($query);
 
-        // Bind dos parâmetros
         $paramIndex = 1;
         $stmt->bindValue($paramIndex++, '%' . strtoupper($filtro) . '%');
 
@@ -247,20 +243,18 @@ class PostgresPedidoDao extends PostgresDao {
                 WHERE
                     p.cliente_id = c.id";
 
-        // Monta dinamicamente os filtros
         if (!empty($numero)) {
             $query .= " AND p.numero = :numero";
         }
 
         if (!empty($nome)) {
-            $query .= " AND c.nome ILIKE :nome"; // ILIKE para busca case-insensitive (Postgres)
+            $query .= " AND c.nome ILIKE :nome"; 
         }
 
         $query .= " ORDER BY p.id";
 
         $stmt = $this->conn->prepare($query);
 
-        // Atribui os valores dos parâmetros
         if (!empty($numero)) {
             $stmt->bindValue(':numero', $numero, PDO::PARAM_INT);
         }

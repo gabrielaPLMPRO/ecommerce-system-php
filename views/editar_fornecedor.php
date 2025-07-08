@@ -13,7 +13,6 @@ $daoEndereco = $factory->getEnderecoDao();
 $fornecedor = $dao->buscaPorId($id);
 $endereco= $daoEndereco->buscaPorId($idEndereco);
 
-// $endereco = $dao->buscaPorId($idEndereco);
 
 if($fornecedor==null) {
     $fornecedor = new Fornecedor( null, null, null, null, null, null);
