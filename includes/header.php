@@ -86,7 +86,4 @@ if (is_session_started() === FALSE) {
       </ul>
     </nav>
   </div>
-
-  <!-- Carrinho de Compras -->
- 
 </header>

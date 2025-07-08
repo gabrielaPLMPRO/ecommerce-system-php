@@ -76,7 +76,6 @@ if($usuario==null) {
             </select>
 
             <?php if (($usuario->getTipo() === 'admin' &&  $cliente==null)|| $cliente==null ): ?>
-                <!-- Campo hidden para garantir envio do valor -->
                 <input type="hidden" name="tipo" value="admin">
             <?php endif; ?>
         </div>

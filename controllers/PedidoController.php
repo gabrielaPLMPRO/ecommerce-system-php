@@ -70,7 +70,6 @@ switch($_POST['acao']){
         ?>
 
         <?php if (isset($_SESSION["tipo"]) && $_SESSION["tipo"] === "cliente"): ?>
-    <!-- Carrossel com todas as fotos dos produtos do pedido -->
             <div id="carouselPedido<?= $pedido_id ?>" class="carousel slide mb-4" data-ride="carousel">
                 <div class="carousel-inner">
                     <?php foreach ($itens as $index => $item): 
@@ -85,7 +84,6 @@ switch($_POST['acao']){
                     <?php endforeach; ?>
                 </div>
 
-                <!-- Botões personalizados com fundo escuro e setas brancas -->
                 <a class="carousel-control-prev" href="#carouselPedido<?= $pedido_id ?>" role="button" data-slide="prev" style="background-color: rgba(0,0,0,0.5); width: 40px; height: 40px; top: 50%; transform: translateY(-50%); border-radius: 50%;">
                     <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1);"></span>
                     <span class="sr-only">Anterior</span>
@@ -99,7 +97,6 @@ switch($_POST['acao']){
 
 
 
-        <!-- Tabela com detalhes dos itens -->
         <table class="table table-sm">
             <thead>
                 <tr>

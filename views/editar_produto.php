@@ -22,7 +22,7 @@ if($produto==null) {
 <style>
 .upload-label {
     display: inline-block;
-    background-color: #0d6efd; /* cor primária do Bootstrap 5 */
+    background-color: #0d6efd; 
     color: white;
     padding: 8px 12px;
     border-radius: 5px;
@@ -40,18 +40,18 @@ if($produto==null) {
 
 #upload-status {
     margin-top: 6px;
-    color: #6c757d; /* cinza do Bootstrap */
+    color: #6c757d; 
     font-size: 0.85rem;
     font-style: italic;
 }
 
 .preview-img {
-    display: block; /* já exibe quando tiver src */
+    display: block; 
     margin-top: 12px;
     max-width: 200px;
     border-radius: 6px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.12);
-    border: 1px solid #dee2e6; /* cinza claro */
+    border: 1px solid #dee2e6; 
 }
 </style>
 <div class="container mt-4">

@@ -49,7 +49,7 @@ include "../includes/verifica_user_admin.php";
         .imagem-cinza {
             filter: grayscale(100%);
             opacity: 0.6;
-            pointer-events: none; /* Opcional: impede clique, se fosse imagem clicável */
+            pointer-events: none; 
         }
         .btn-indisponivel {
             background-color: #cccccc;

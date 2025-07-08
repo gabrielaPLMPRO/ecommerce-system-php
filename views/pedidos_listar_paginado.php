@@ -14,7 +14,6 @@ include "../includes/verifica_user.php";
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
-    /* Estilo laranja para o modal (inspirado no AliExpress) */
     .modal-header.bg-orange {
       background-color: #ff5a00;
       color: white;
@@ -38,7 +37,6 @@ include "../includes/verifica_user.php";
     </div>
   </div>
 
-  <!-- Modal para Alterar Status -->
   <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

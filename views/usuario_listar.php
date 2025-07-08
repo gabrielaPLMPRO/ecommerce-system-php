@@ -12,7 +12,6 @@ if (isset($_GET['busca']) && !empty($_GET['busca'])) {
 
 <?php include('../includes/header.php'); ?>
 
-<!-- Adicionando a CDN do Font Awesome -->
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -21,7 +20,6 @@ if (isset($_GET['busca']) && !empty($_GET['busca'])) {
     <div class="card-form">
         <h2>Usuários</h2>
 
-        <!-- Formulário de Busca -->
         <form method="GET" class="form-inline mb-3">
             <input type="text" name="busca" class="form-control mr-2" placeholder="Buscar por nome ou ID" value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
             <button type="submit" class="btn btn-custom">Buscar</button>
@@ -51,7 +49,6 @@ if (isset($_GET['busca']) && !empty($_GET['busca'])) {
         <?php endif; ?>
         <?php endif; ?>
 
-        <!-- Tabela de Fornecedores -->
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>
