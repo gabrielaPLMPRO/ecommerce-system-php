@@ -35,8 +35,14 @@ switch($_POST['acao']){
                     <div <?php echo $_SESSION["tipo"]==="cliente"? 'hidden':''; ?>>
                         <select class="status-select form-control form-control-sm" data-id="<?= $pedido->getId(); ?>">
                             <option value="pendente" <?= $pedido->getStatus() == 'pendente' ? 'selected' : '' ?>>Pendente</option>
-                            <option value="enviado" <?= $pedido->getStatus() == 'enviado' ? 'selected' : '' ?>>Enviado</option>
-                            <option value="cancelado" <?= $pedido->getStatus() == 'cancelado' ? 'selected' : '' ?>>Cancelado</option>
+                            <option value="enviado" 
+                                <?= $pedido->getStatus() == 'enviado' ? 'selected' : '' ?>
+                                <?= $pedido->getStatus() == 'cancelado' ? 'disabled' : '' ?>
+                            >Enviado</option>
+                            <option value="cancelado" 
+                                <?= $pedido->getStatus() == 'cancelado' ? 'selected' : '' ?>
+                                <?= $pedido->getStatus() == 'enviado' ? 'disabled' : '' ?>
+                            >Cancelado</option>
                         </select>
                     </div>
                 </div>
