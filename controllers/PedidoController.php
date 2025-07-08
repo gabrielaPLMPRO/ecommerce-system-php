@@ -33,7 +33,7 @@ switch($_POST['acao']){
                         Total: R$ <?= number_format($pedido->getTotal(), 2, ',', '.'); ?>
                     </div>
                     <div <?php echo $_SESSION["tipo"]==="cliente"? 'hidden':''; ?>>
-                        <select class="status-select form-control form-control-sm" data-id="<?= $pedido->getId(); ?>">
+                        <select class="status-select form-control form-control-sm" data-id="<?= $pedido->getId(); ?>" <?= $pedido->getStatus() == 'cancelado'  || $pedido->getStatus() == 'enviado' ? 'disabled' : '' ?>>
                             <option value="pendente" <?= $pedido->getStatus() == 'pendente' ? 'selected' : '' ?>>Pendente</option>
                             <option value="enviado" 
                                 <?= $pedido->getStatus() == 'enviado' ? 'selected' : '' ?>
@@ -157,6 +157,17 @@ switch($_POST['acao']){
 
         if ($pedidoDao->altera($pedido)) {
             echo "Status atualizado com sucesso.";
+            if ($status == 'cancelado') {
+                $itens = $itensDao->buscaPorPedidoId($pedido->getId());
+                foreach ($itens as $item) {
+                    $estoque = $estoqueDao->buscaPorProdutoId($item->getProdutoId());
+                    if ($estoque) {
+                        $novaQuantidade = $estoque->getEstoque() + $item->getQuantidade();
+                        $estoque->setEstoque($novaQuantidade);
+                        $estoqueDao->altera($estoque); 
+                    }
+                }
+            }
         } else {
             echo "Erro ao atualizar.";
         }
